@@ -1,2 +1,9 @@
 
-CityStudio/Library/
+CityStudio/[Ll]ibrary/
+CityStudio/[Tt]emp/
+CityStudio/[Oo]bj/
+CityStudio/[Bb]uild/
+CityStudio/[Bb]uilds/
+CityStudio/[Ll]ogs/
+CityStudio/[Uu]ser[Ss]ettings/
+CityStudio/.vs/

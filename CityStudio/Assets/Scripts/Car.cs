@@ -6,57 +6,57 @@ using UnityEngine.UI;
 public class Car : MonoBehaviour
 {
     public Text speedometer;
+    public float maxspeed = 5;
+    public float steer = 0.3f;
+    public float acceleration = 15;
 
-    private float speed = 0;
-    private float maxspeed = 20;
+    static public bool col = false;
+
+    private float rotate;
+    private float accelerate;
+    private float velocity;
     private bool reverse = false;
 
-    // Start is called before the first frame update
     void Start()
     {
     }
 
-    // Update is called once per frame
     void Update()
     {
-        speedometer.text = "Speed: " + speed.ToString();
-        
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            reverse = !reverse;
-        }
-        if (Input.GetKey(KeyCode.W) && speed < maxspeed)
-        {
-            if(!reverse)
-                speed += 0.03f;
-            else
-                speed -= 0.03f;
-        }
-        if (speed > 0)
-        {
-            if (Input.GetKey(KeyCode.A))
-                transform.Rotate(new Vector3(0, -0.08f, 0));
-            if (Input.GetKey(KeyCode.D))
-                transform.Rotate(new Vector3(0, 0.08f, 0));
-            if (Input.GetKey(KeyCode.S))
-                speed -= 0.07f;
-            speed -= 0.01f;
-            if (speed < 0)
-                speed = 0;
-        }
-        else if (speed < 0)
-        {
-            if (Input.GetKey(KeyCode.A))
-                transform.Rotate(new Vector3(0, 0.08f, 0));
-            if (Input.GetKey(KeyCode.D))
-                transform.Rotate(new Vector3(0, -0.08f, 0));
-            if (Input.GetKey(KeyCode.S))
-                speed += 0.07f;
-            speed += 0.01f;
-            if (speed > 0)
-                speed = 0;
-        }
+        velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
+        speedometer.text = "Speed: " + velocity.ToString();
 
-        gameObject.GetComponent<Rigidbody>().MovePosition(transform.position + (transform.forward * speed * Time.deltaTime));
+        if (Input.GetKeyUp(KeyCode.Q))
+            reverse = !reverse;
+        if (Input.GetKey(KeyCode.W) && velocity < maxspeed)
+            accelerate = acceleration;
+        if (Input.GetKey(KeyCode.S) && velocity > 0)
+            gameObject.GetComponent<Rigidbody>().velocity *= 0.99f;
+        if (Input.GetKey(KeyCode.A) && velocity > 0.001f)
+            rotate = -steer;
+        if (Input.GetKey(KeyCode.D) && velocity > 0.01f)
+            rotate = steer;
+
+        if (reverse)
+        {
+            accelerate = accelerate * -1;
+            if (rotate != 0)
+            {
+                rotate *= -1;
+                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * -transform.forward;
+                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(Vector3.up * rotate));
+            }
+
+        }
+        else if (rotate != 0)
+        {
+            gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * transform.forward;
+            gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(Vector3.up * rotate));
+        }
+        
+        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * accelerate * Time.deltaTime, ForceMode.Impulse);
+
+        accelerate = 0;
+        rotate = 0;
     }
 }

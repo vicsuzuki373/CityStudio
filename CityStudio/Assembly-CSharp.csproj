@@ -53,10 +53,11 @@
     <UnityVersion>2020.2.4f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\igEditor.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
     <Compile Include="Assets\igEditorUI.cs" />
-    <Compile Include="Assets\Scripts\MouseLook.cs" />
+    <Compile Include="Assets\Scripts\SignsCollision.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\ProjectSettings\ProjectVersion.txt" />

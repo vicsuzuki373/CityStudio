@@ -9,6 +9,7 @@ public class igEditor : MonoBehaviour
 {
     public GameObject Canvas;
     public GameObject VideoPlayerPrompt;
+    public GameObject SpeedNumberPrompt;
     GraphicRaycaster uiRaycast;
     PointerEventData uiPointerEventData;
     public EventSystem uiEventSystem;
@@ -52,29 +53,51 @@ public class igEditor : MonoBehaviour
         cameraSwitch();
 
         if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
-            return;
+        { Cursor.lockState = CursorLockMode.Locked; return; }
+        Cursor.lockState = CursorLockMode.None;
 
         selectorRC();
 
         if (Input.GetKey(KeyCode.W))
         {
-            overheadCam.transform.Translate(-Vector3.forward * Time.deltaTime * camSpeed, Space.World);
+            if(overheadCam.transform.eulerAngles.y == 180.0f)
+                overheadCam.transform.Translate(-Vector3.forward * Time.deltaTime * camSpeed, Space.World);
+            else
+                overheadCam.transform.Translate(Vector3.forward * Time.deltaTime * camSpeed, Space.World);
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            overheadCam.transform.Translate(Vector3.forward * Time.deltaTime * camSpeed, Space.World);
+            if (overheadCam.transform.eulerAngles.y == 180.0f)
+                overheadCam.transform.Translate(Vector3.forward * Time.deltaTime * camSpeed, Space.World);
+            else
+                overheadCam.transform.Translate(-Vector3.forward * Time.deltaTime * camSpeed, Space.World);
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            overheadCam.transform.Translate(Vector3.right * Time.deltaTime * camSpeed, Space.World);
+            if (overheadCam.transform.eulerAngles.y == 180.0f)
+                overheadCam.transform.Translate(Vector3.right * Time.deltaTime * camSpeed, Space.World);
+            else
+                overheadCam.transform.Translate(-Vector3.right * Time.deltaTime * camSpeed, Space.World);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            overheadCam.transform.Translate(-Vector3.right * Time.deltaTime * camSpeed, Space.World);
+            if (overheadCam.transform.eulerAngles.y == 180.0f)
+                overheadCam.transform.Translate(-Vector3.right * Time.deltaTime * camSpeed, Space.World);
+            else
+                overheadCam.transform.Translate(Vector3.right * Time.deltaTime * camSpeed, Space.World);
         }
 
-        if(Input.GetAxisRaw("Mouse ScrollWheel") > 0)
+        if (Input.GetKey(KeyCode.Q))
+        {
+            overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, 0.0f, overheadCam.transform.eulerAngles.z);
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, 180.0f, overheadCam.transform.eulerAngles.z);
+        }
+
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
         {
             overheadCam.transform.Translate(Vector3.up * Time.deltaTime * camSpeed, Space.World);
         }
@@ -107,9 +130,15 @@ public class igEditor : MonoBehaviour
                 {
                     case 1:
                         VideoPlayerPrompt.SetActive(true); // set active for this case and deactivate all irrelevant UI fields
+                        SpeedNumberPrompt.SetActive(false);
+                        break;
+                    case 2:
+                        VideoPlayerPrompt.SetActive(false);
+                        SpeedNumberPrompt.SetActive(true);
                         break;
                     default:
                         VideoPlayerPrompt.SetActive(false); // set everything inactive if there is an err in entityType
+                        SpeedNumberPrompt.SetActive(false);
                         break;
                 }
             }

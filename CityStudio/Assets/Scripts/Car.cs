@@ -1,20 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Car : MonoBehaviour
 {
-    public Text speedometer;
     public float maxspeed = 5;
     public float steer = 0.3f;
     public float acceleration = 15;
 
-    static public bool col = false;
+    public static bool col = false;
+    public static float velocity;
 
     private float rotate;
     private float accelerate;
-    private float velocity;
     private bool reverse = false;
 
     void Start()
@@ -24,7 +22,6 @@ public class Car : MonoBehaviour
     void Update()
     {
         velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
-        speedometer.text = "Speed: " + velocity.ToString();
 
         if (Input.GetKeyUp(KeyCode.Q))
             reverse = !reverse;

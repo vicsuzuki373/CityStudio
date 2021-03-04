@@ -5,7 +5,8 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     public float maxspeed = 5;
-    public float steer = 0.3f;
+    public float steer = 25;
+    public float maxsteer = 50;
     public float acceleration = 15;
 
     public static bool col = false;
@@ -23,37 +24,41 @@ public class Car : MonoBehaviour
     {
         velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
 
-        if (Input.GetKeyUp(KeyCode.Q))
+        if (Input.GetKeyUp(KeyCode.Q) && velocity < 0.1f)
             reverse = !reverse;
         if (Input.GetKey(KeyCode.W) && velocity < maxspeed)
             accelerate = acceleration;
-        if (Input.GetKey(KeyCode.S) && velocity > 0)
-            gameObject.GetComponent<Rigidbody>().velocity *= 0.99f;
-        if (Input.GetKey(KeyCode.A) && velocity > 0.001f)
-            rotate = -steer;
-        if (Input.GetKey(KeyCode.D) && velocity > 0.01f)
-            rotate = steer;
+        if (Input.GetKey(KeyCode.S) && velocity > 0.2f)
+            accelerate = -acceleration * 2;
+        if (Input.GetKey(KeyCode.A) && velocity > 0.01f && rotate > -maxsteer)
+            rotate -= steer * Time.deltaTime;
+        if (Input.GetKey(KeyCode.D) && velocity > 0.01f && rotate < maxsteer)
+            rotate += steer * Time.deltaTime;
 
-        if (reverse)
+
+        if (!reverse)
         {
-            accelerate = accelerate * -1;
+            gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * accelerate * Time.deltaTime, ForceMode.Impulse);
             if (rotate != 0)
             {
-                rotate *= -1;
-                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * -transform.forward;
-                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(Vector3.up * rotate));
+                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate));
+                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * transform.forward;
             }
 
         }
-        else if (rotate != 0)
+        else
         {
-            gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * transform.forward;
-            gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(Vector3.up * rotate));
+            gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * -accelerate * Time.deltaTime, ForceMode.Impulse);
+            if (rotate != 0)
+            {
+                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate * -1));
+                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * -transform.forward;
+            }
         }
-        
-        gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * accelerate * Time.deltaTime, ForceMode.Impulse);
 
         accelerate = 0;
-        rotate = 0;
+        rotate *= 0.8f;
+        if (velocity < 0.01f)
+            velocity = 0;
     }
 }

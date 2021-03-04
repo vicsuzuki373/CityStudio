@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class igEditor : MonoBehaviour
 {
@@ -14,6 +16,13 @@ public class igEditor : MonoBehaviour
     PointerEventData uiPointerEventData;
     public EventSystem uiEventSystem;
     public TextMeshProUGUI entityTypeSelection;
+
+    public GameObject streetLights;
+    List<Light> lightPieces;
+    public Volume worldVolume;
+    Bloom worldBloom;
+    public Light worldLight;
+    bool lightSwitch;
 
     public GameObject overheadCam;
     public GameObject playerCam;
@@ -28,6 +37,11 @@ public class igEditor : MonoBehaviour
 
     void Start()
     {
+        lightPieces = new List<Light>();
+        streetLights.GetComponentsInChildren(lightPieces);
+        lightSwitch = false;
+        worldVolume.profile.TryGet(out worldBloom);
+
         camSwitch = true;
         uiRaycast = Canvas.GetComponent<GraphicRaycaster>();
     }
@@ -160,5 +174,34 @@ public class igEditor : MonoBehaviour
             selected.GetComponent<igEditorUI>().changeInfo(_info);
         }
         catch { }
+    }
+
+    public void toggleLight()
+    {
+        lightSwitch = !lightSwitch;
+
+        if(lightSwitch == true)
+        {
+            worldBloom.intensity.value = 15.0f;
+            worldLight.intensity = 0.15f;
+            foreach(Light _lights in lightPieces)
+            {
+                _lights.intensity = 5.0f;
+            }
+            RenderSettings.ambientIntensity = 0.0f;
+            playerCam.GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
+                
+        }
+        else
+        {
+            worldBloom.intensity.value = 0.0f;
+            worldLight.intensity = 0.75f; 
+            foreach (Light _lights in lightPieces)
+            {
+                _lights.intensity = 0.0f;
+            }
+            RenderSettings.ambientIntensity = 1.0f;
+            playerCam.GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+        }
     }
 }

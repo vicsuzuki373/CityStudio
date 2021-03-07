@@ -21,7 +21,8 @@ public class igEditor : MonoBehaviour
     List<Light> lightPieces;
     public Volume worldVolume;
     Bloom worldBloom;
-    public Light worldLight;
+    public Light worldLightSun;
+    public Light worldLightMoon;
     bool lightSwitch;
 
     public GameObject overheadCam;
@@ -183,7 +184,8 @@ public class igEditor : MonoBehaviour
         if(lightSwitch == true)
         {
             worldBloom.intensity.value = 15.0f;
-            worldLight.intensity = 0.15f;
+            worldLightSun.gameObject.SetActive(false);
+            worldLightMoon.gameObject.SetActive(true);
             foreach(Light _lights in lightPieces)
             {
                 _lights.intensity = 5.0f;
@@ -195,7 +197,8 @@ public class igEditor : MonoBehaviour
         else
         {
             worldBloom.intensity.value = 0.0f;
-            worldLight.intensity = 0.75f; 
+            worldLightSun.gameObject.SetActive(true);
+            worldLightMoon.gameObject.SetActive(false);
             foreach (Light _lights in lightPieces)
             {
                 _lights.intensity = 0.0f;

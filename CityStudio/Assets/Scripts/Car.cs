@@ -57,7 +57,7 @@ public class Car : MonoBehaviour
         }
 
         accelerate = 0;
-        rotate *= 0.8f;
+        rotate *= 0.9f;
         if (velocity < 0.01f)
             velocity = 0;
     }

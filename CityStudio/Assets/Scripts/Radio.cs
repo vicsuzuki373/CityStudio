@@ -11,7 +11,7 @@ public class Radio : MonoBehaviour
     void Start()
     {
         gameObject.GetComponent<AudioSource>().Play();
-        gameObject.GetComponent<AudioSource>().Pause();
+        gameObject.GetComponent<AudioSource>().mute = true;
         
         //DirectoryInfo dir = new DirectoryInfo(Application.dataPath + "/Radio");
         //FileInfo[] info = dir.GetFiles("*.mp3*");
@@ -33,9 +33,9 @@ public class Radio : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (power)
-                gameObject.GetComponent<AudioSource>().Pause();
+                gameObject.GetComponent<AudioSource>().mute = true;
             else
-                gameObject.GetComponent<AudioSource>().UnPause();
+                gameObject.GetComponent<AudioSource>().mute = false;
             power = !power;
         }
     }

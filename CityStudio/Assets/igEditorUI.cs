@@ -37,7 +37,7 @@ public class igEditorUI : MonoBehaviour
     {
         switch (entityType)
         {
-            case 1:
+            case 1: // case 1 has been outdated, using fileexplorer now
                 try
                 {
                     foreach (VideoPlayer _videoPlayer in videoPlayer)

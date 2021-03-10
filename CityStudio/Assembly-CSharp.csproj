@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\igEditorUI.cs" />
     <Compile Include="Assets\Scripts\Raycast.cs" />
+    <Compile Include="Assets\fileExplorer.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\ProjectSettings\ProjectVersion.txt" />

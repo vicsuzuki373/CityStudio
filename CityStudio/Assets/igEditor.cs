@@ -10,7 +10,7 @@ using UnityEngine.Rendering.Universal;
 public class igEditor : MonoBehaviour
 {
     public GameObject Canvas;
-    public GameObject VideoPlayerPrompt;
+    public GameObject dropDownPrompt;
     public GameObject SpeedNumberPrompt;
     GraphicRaycaster uiRaycast;
     PointerEventData uiPointerEventData;
@@ -24,6 +24,7 @@ public class igEditor : MonoBehaviour
     public Light worldLightSun;
     public Light worldLightMoon;
     bool lightSwitch;
+    public GameObject radioObject;
 
     public GameObject overheadCam;
     public GameObject playerCam;
@@ -47,6 +48,11 @@ public class igEditor : MonoBehaviour
         uiRaycast = Canvas.GetComponent<GraphicRaycaster>();
     }
 
+    void Update()
+    {
+        cameraSwitch();
+    }
+
     private void FixedUpdate()
     {
         cameraControls();
@@ -54,7 +60,7 @@ public class igEditor : MonoBehaviour
 
     void cameraSwitch()
     {
-        if (Input.GetKeyUp(KeyCode.P)) // maybe change trigger later
+        if (Input.GetKeyDown(KeyCode.P)) // maybe change trigger later
         {
             camSwitch = !camSwitch;
             overheadCam.SetActive(camSwitch);
@@ -65,8 +71,6 @@ public class igEditor : MonoBehaviour
 
     void cameraControls()
     {
-        cameraSwitch();
-
         if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
         { Cursor.lockState = CursorLockMode.Locked; return; }
         Cursor.lockState = CursorLockMode.None;
@@ -141,40 +145,62 @@ public class igEditor : MonoBehaviour
                 selected = hit.collider.gameObject;
                 entityTypeSelection.text = selected.name;
 
-                switch (selected.GetComponent<igEditorUI>().entityType)
-                {
-                    case 1:
-                        VideoPlayerPrompt.SetActive(true); // set active for this case and deactivate all irrelevant UI fields
-                        SpeedNumberPrompt.SetActive(false);
-                        break;
-                    case 2:
-                        VideoPlayerPrompt.SetActive(false);
-                        SpeedNumberPrompt.SetActive(true);
-                        break;
-                    default:
-                        VideoPlayerPrompt.SetActive(false); // set everything inactive if there is an err in entityType
-                        SpeedNumberPrompt.SetActive(false);
-                        break;
-                }
+                switchSelection();
             }
-            else if (selected != null)
+            else if (selected != null && selected.GetComponent<igEditorUI>().entityType != 3)
                 selected.transform.position = hit.point;
         }
         else if (Input.GetMouseButton(1) && uiResults.Count == 0) //rightclick
         {
             selected = null; // unselect
             entityTypeSelection.text = "Nothing Selected";
-            VideoPlayerPrompt.SetActive(false); //set everything inactive because nothing selected
+            dropDownPrompt.SetActive(false); //set everything inactive because nothing selected
+            SpeedNumberPrompt.SetActive(false);
         }
     }
 
-    public void editInfo(string _info)
+    void switchSelection()
+    {
+        switch (selected.GetComponent<igEditorUI>().entityType)
+        {
+            case 1:
+                //VideoPlayerPrompt.SetActive(true); // set active for this case and deactivate all irrelevant UI fields
+                SpeedNumberPrompt.SetActive(false);
+                dropDownPrompt.SetActive(true);
+                break;
+            case 2:
+                //VideoPlayerPrompt.SetActive(false);
+                SpeedNumberPrompt.SetActive(true);
+                dropDownPrompt.SetActive(false);
+                break;
+            case 3:
+                SpeedNumberPrompt.SetActive(false);
+                dropDownPrompt.SetActive(true);
+                break;
+            default:
+                //VideoPlayerPrompt.SetActive(false); // set everything inactive if there is an err in entityType
+                SpeedNumberPrompt.SetActive(false);
+                dropDownPrompt.SetActive(false);
+                break;
+        }
+    }
+
+    public void editInfo(string info)
     {
         try
         {
-            selected.GetComponent<igEditorUI>().changeInfo(_info);
+            if(selected.GetComponent<igEditorUI>().entityType == 1)
+                this.GetComponent<fileExplorer>().applySelection(selected);
+            else if(selected.GetComponent<igEditorUI>().entityType == 2)
+            {
+                selected.GetComponent<igEditorUI>().changeInfo(info);
+            }
+            else if (selected.GetComponent<igEditorUI>().entityType == 3)
+            {
+                this.GetComponent<fileExplorer>().applySelection(selected);
+            }
         }
-        catch { }
+        catch { Debug.Log("error in editinfo"); }
     }
 
     public void toggleLight()
@@ -206,5 +232,12 @@ public class igEditor : MonoBehaviour
             RenderSettings.ambientIntensity = 1.0f;
             playerCam.GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
         }
+    }
+
+    public void toggleRadio()
+    {
+        selected = radioObject;
+        entityTypeSelection.text = selected.name;
+        switchSelection();
     }
 }

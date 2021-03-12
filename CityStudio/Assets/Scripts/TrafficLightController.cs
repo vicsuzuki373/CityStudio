@@ -5,11 +5,11 @@ using UnityEngine;
 public class TrafficLightController : MonoBehaviour
 {
     private float timer;
-    public static int status = 3;
+    public static int status;
     // Start is called before the first frame update
     void Start()
     {
-        
+        status = 3;
     }
 
     // Update is called once per frame

@@ -29,7 +29,7 @@ public class Radio : MonoBehaviour
 
     private void OnMouseOver()
     {
-        UIController.cupinteract = 3;
+        GameController.cupinteract = 3;
         if (Input.GetMouseButtonDown(0))
         {
             if (power)

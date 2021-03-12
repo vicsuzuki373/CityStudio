@@ -26,7 +26,7 @@ public class BeverageCup : MonoBehaviour
     {
         if (Cup1.activeSelf)
         {
-            UIController.cupinteract = 1;
+            GameController.cupinteract = 1;
             if (Input.GetMouseButtonDown(0))
             {
                 random = Random.Range(0, 10);
@@ -39,7 +39,7 @@ public class BeverageCup : MonoBehaviour
         }
         else
         {
-            UIController.cupinteract = 2;
+            GameController.cupinteract = 2;
             if (Input.GetMouseButton(0))
             {
                 progress += 60 * Time.deltaTime;

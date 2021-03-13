@@ -8,6 +8,7 @@ public class Raycast : MonoBehaviour
 {
     private Collider target;
     private bool hovered = false;
+
     public Volume worldVolume;
     DepthOfField worldDepth;
     public float focalShiftSpeed;
@@ -43,15 +44,24 @@ public class Raycast : MonoBehaviour
             hit.collider.SendMessage("OnMouseOver", SendMessageOptions.DontRequireReceiver);
         }
 
-        worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, Vector3.Distance(transform.position, hit.point), Time.deltaTime * focalShiftSpeed);
-        if(worldDepth.focusDistance.value < 0.5f)
+        
+
+
+
+        if(Vector3.Distance(transform.position, hit.point) < 0.75f)
         {
             worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 25.0f, Time.deltaTime * focalShiftSpeed);
+            worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 0.2f, Time.deltaTime * focalShiftSpeed);
+            //Debug.Log("near");
+
         } //near
         else
         {
-            worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 50.0f, Time.deltaTime * focalShiftSpeed);
+            worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 20.0f, Time.deltaTime * focalShiftSpeed);
+            worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 15f, Time.deltaTime * focalShiftSpeed);
+            //Debug.Log("far");
         } //far
-        //Debug.Log(worldDepth.focusDistance.value);
+   
+        //Debug.Log(Vector3.Distance(transform.position, hit.point));
     }
 }

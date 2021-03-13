@@ -24,7 +24,8 @@ public class fileExplorer : MonoBehaviour
 
     FileInfo[] diFiles;
     string lastSelectedFile;
-    AudioSource _audio;
+    List<AudioClip> _audio;
+    int soundChannel;
     List<VideoPlayer> _video;
 
     void Start()
@@ -103,14 +104,15 @@ public class fileExplorer : MonoBehaviour
         dropDown.AddOptions(dropDownOptions);
     }
 
-    public void applySelection(GameObject _object) // link to button object
+    public void applySelection(GameObject _object, int _soundChannel) // link to button object
     {
         if (_object == null)
             return;
 
         if (_object.GetComponent<AudioSource>() && lastSelectedFile.Contains(".mp3"))
         {
-            _audio = _object.GetComponent<AudioSource>();
+            _audio = _object.GetComponent<Radio>().sounds;
+            soundChannel = _soundChannel;
             StartCoroutine(GetAudioClip());
         }
 
@@ -139,9 +141,10 @@ public class fileExplorer : MonoBehaviour
             else
             {
                 AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-                _audio.clip = clip;
-                _audio.Play();
-                _audio.mute = true;
+                if (_audio.Count < soundChannel)
+                    _audio[soundChannel] = clip;
+                else
+                    _audio.Add(clip);
                 StopCoroutine(GetAudioClip());
             }
         }

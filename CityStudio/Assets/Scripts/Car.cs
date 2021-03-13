@@ -16,12 +16,17 @@ public class Car : MonoBehaviour
     private float accelerate;
     private bool reverse = false;
 
+    public GameObject editorCam;
+
     void Start()
     {
     }
 
     void Update()
     {
+        if (editorCam.activeInHierarchy) // disable car control during editor
+            return;
+
         velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
 
         if (Input.GetKeyUp(KeyCode.Q) && velocity < 0.1f)

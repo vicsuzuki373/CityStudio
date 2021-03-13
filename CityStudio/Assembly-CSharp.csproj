@@ -53,13 +53,14 @@
     <UnityVersion>2020.2.4f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\TrafficLightChecker.cs" />
     <Compile Include="Assets\Scripts\TrafficLightController.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\fileExplorer.cs" />
     <Compile Include="Assets\Scripts\SignsCollision.cs" />
     <Compile Include="Assets\Scripts\RosslandCheckpoint.cs" />
     <Compile Include="Assets\Scripts\LaneChecker.cs" />
-    <Compile Include="Assets\Scripts\Radio.cs" />
+    <Compile Include="Assets\Scripts\Radio\Radio.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\ConlinCheckpoint.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
@@ -68,7 +69,10 @@
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\igEditorUI.cs" />
     <Compile Include="Assets\Scripts\Raycast.cs" />
-    <Compile Include="Assets\Scripts\TrafficLightChecker.cs" />
+    <Compile Include="Assets\Scripts\Radio\RadioPrevious.cs" />
+    <Compile Include="Assets\Scripts\Radio\RadioNext.cs" />
+    <Compile Include="Assets\Scripts\Radio\RadioPlayorPause.cs" />
+    <Compile Include="Assets\Scripts\Phone.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

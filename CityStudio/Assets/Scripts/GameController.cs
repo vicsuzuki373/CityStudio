@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
     public Text objectiveText;
     public GameObject wrongLaneUI;
     public static bool wrongLane = false;
-    private float wrongLaneTimer = 0;
+    private float wrongLaneTimer = 1;
 
     public GameObject redLightUI;
     public static bool redLight = false;
@@ -20,11 +20,12 @@ public class GameController : MonoBehaviour
     public GameObject speedLimitUI;
     public int speedLimit = 50;
 
-    public GameObject EtoInteract;
+    public GameObject Interact;
     public GameObject cupProgress;
     public Text speedometer;
 
-    public static int cupinteract = 0;
+    public static bool interact = false;
+    public static string interactMessage = "E to Interact";
 
     private int intProgress;
     private float speed;
@@ -39,6 +40,34 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+        //Speedometer
+        speed = Car.velocity * 14;
+        speedint = (int)speed;
+        speedometer.text = "Speed: " + speedint.ToString();
+        if (speedint > speedLimit)
+            speedLimitUI.SetActive(true);
+        else
+            speedLimitUI.SetActive(false);
+
+        //Show message to interact
+        if (interact)
+        {
+            Interact.GetComponentInChildren<Text>().text = interactMessage;
+            Interact.SetActive(true);
+        }
+        else
+            Interact.SetActive(false);
+
+        //Show progress only when it's above 0
+        cupProgress.gameObject.SetActive(false);
+        if (BeverageCup.progress > 0 && interact && interactMessage == "Clean up")
+        {
+            cupProgress.gameObject.SetActive(true);
+            intProgress = (int)BeverageCup.progress;
+            cupProgress.GetComponentInChildren<Text>().text = intProgress.ToString();
+        }
+        interact = false;
+               
         //Checkpoint updates
         if (conlinCheckpoint.activeSelf)
         {
@@ -53,17 +82,18 @@ public class GameController : MonoBehaviour
         }
 
         //Check if player is in wrong lane
-        if (wrongLane && wrongLaneTimer < 0.5f)
+        if (!wrongLane)
         {
-            wrongLaneUI.SetActive(true);
-            wrongLaneTimer += Time.deltaTime;
+            if(wrongLaneTimer > 0.2f)
+                wrongLaneUI.SetActive(false);
         }
         else
         {
-            wrongLaneUI.SetActive(false);
+            wrongLaneUI.SetActive(true);
             wrongLaneTimer = 0;
-            wrongLane = false;
         }
+        wrongLaneTimer += Time.deltaTime;
+        wrongLane = false;
 
         //If player passed through red light
         if (redLight && redLightTimer < 1)
@@ -77,39 +107,5 @@ public class GameController : MonoBehaviour
             redLightTimer = 0;
             redLight = false;
         }
-
-        if (cupinteract != 0)
-            EtoInteract.SetActive(true);
-        else
-            EtoInteract.SetActive(false);
-
-        cupProgress.gameObject.SetActive(false);
-
-        if (cupinteract == 1)
-            EtoInteract.GetComponentInChildren<Text>().text = "Drink";
-        else if (cupinteract == 2)
-        {
-            EtoInteract.GetComponentInChildren<Text>().text = "Fix";
-            if (BeverageCup.progress > 0)
-            {
-                cupProgress.gameObject.SetActive(true);
-                intProgress = (int)BeverageCup.progress;
-                cupProgress.GetComponentInChildren<Text>().text = intProgress.ToString();
-            }
-        }
-        else if (cupinteract == 3)
-            EtoInteract.GetComponentInChildren<Text>().text = "Turn Radio On/Off";
-
-        cupinteract = 0;
-
-        speed = Car.velocity * 14;
-        speedint = (int)speed;
-        speedometer.text = "Speed: " + speedint.ToString();
-        if (speedint > speedLimit)
-            speedLimitUI.SetActive(true);
-        else
-            speedLimitUI.SetActive(false);
-
-
     }
 }

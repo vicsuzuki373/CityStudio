@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Radio : MonoBehaviour
 {
+    public static float timeDistracted = 0;
     public static int action = 0;
     public List<AudioClip> sounds = new List<AudioClip>();
     public Text soundName;
@@ -92,5 +93,13 @@ public class Radio : MonoBehaviour
             }
         }
         action = 0;
+    }
+
+    private void OnMouseOver()
+    {
+        if (!MenuController.paused)
+        {
+            timeDistracted += Time.deltaTime;
+        }
     }
 }

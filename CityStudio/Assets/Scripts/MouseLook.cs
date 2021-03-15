@@ -10,17 +10,19 @@ public class MouseLook : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        rotation.y += Input.GetAxis("Mouse X");
-        rotation.x += -Input.GetAxis("Mouse Y");
-        rotation.x = Mathf.Clamp(rotation.x, -8f, 20f);
-        rotation.y = Mathf.Clamp(rotation.y, -25f, 25f);
-        
-        transform.localEulerAngles = (Vector2)rotation * sensitivity;
+        if (!MenuController.paused)
+        {
+            rotation.y += Input.GetAxis("Mouse X") + Input.GetAxis("RightJoystickY") / 3;
+            rotation.x += -Input.GetAxis("Mouse Y") + Input.GetAxis("RightJoystickX") / 5;
+            rotation.x = Mathf.Clamp(rotation.x, -8f, 20f);
+            rotation.y = Mathf.Clamp(rotation.y, -25f, 25f);
+
+            transform.localEulerAngles = (Vector2)rotation * sensitivity;
+        }
     }
 }

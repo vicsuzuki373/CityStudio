@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Phone : MonoBehaviour
 {
+    public static float timeDistracted = 0;
     public GameObject Screen;
 
     private bool isRinging = false;
@@ -36,15 +37,19 @@ public class Phone : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (isRinging)
+        if (!MenuController.paused)
         {
-            GameController.interact = true;
-            GameController.interactMessage = "Decline Call";
-            if (Input.GetMouseButtonDown(0))
+            timeDistracted += Time.deltaTime;
+            if (isRinging)
             {
-                gameObject.GetComponent<AudioSource>().mute = true;
-                Screen.SetActive(false);
-                isRinging = false;
+                GameController.interact = true;
+                GameController.interactMessage = "Decline Call";
+                if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton0))
+                {
+                    gameObject.GetComponent<AudioSource>().mute = true;
+                    Screen.SetActive(false);
+                    isRinging = false;
+                }
             }
         }
     }

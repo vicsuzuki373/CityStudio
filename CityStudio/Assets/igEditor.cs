@@ -50,6 +50,8 @@ public class igEditor : MonoBehaviour
     public float minCamHeight;
     bool forward;
 
+    public static bool startEditor = false;
+
     void Start()
     {
         lightPieces = new List<Light>();
@@ -75,20 +77,21 @@ public class igEditor : MonoBehaviour
 
     void cameraSwitch()
     {
-        if (Input.GetKeyDown(KeyCode.P)) // maybe change trigger later
+        if (startEditor) // maybe change trigger later
         {
-            camSwitch = !camSwitch;
+            startEditor = false;
             overheadCam.SetActive(camSwitch);
             Canvas.SetActive(camSwitch);
             playerCam.SetActive(!camSwitch);
+            camSwitch = !camSwitch;
         }
     }
 
     void cameraControls()
     {
-        if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
-        { Cursor.lockState = CursorLockMode.Locked; return; }
-        Cursor.lockState = CursorLockMode.None;
+        //if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
+        //{ Cursor.lockState = CursorLockMode.Locked; return; }
+        //Cursor.lockState = CursorLockMode.None;
 
         selectorRC();
 

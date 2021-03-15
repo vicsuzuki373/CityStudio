@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Objectives")]
     public GameObject conlinCheckpoint;
     public GameObject LeftLane;
     public GameObject RightLane;
     public Text objectiveText;
+
+    [Header("Infractions")]
     public GameObject wrongLaneUI;
     public static bool wrongLane = false;
     private float wrongLaneTimer = 1;
@@ -19,10 +22,18 @@ public class GameController : MonoBehaviour
 
     public GameObject speedLimitUI;
     public int speedLimit = 50;
+    private float lerpvalue = 0;
 
+    public GameObject collisionUI;
+    public static bool collision = false;
+    private float collisionTimer = 0;
+    
+    [Header("UI Gameplay Elements")]
     public GameObject Interact;
     public GameObject cupProgress;
     public Text speedometer;
+    public Text Gear;
+    public GameObject speedometerPointer;
 
     public static bool interact = false;
     public static string interactMessage = "E to Interact";
@@ -41,10 +52,16 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //Speedometer
-        speed = Car.velocity * 14;
+        speed = Car.velocity * 10;
         speedint = (int)speed;
-        speedometer.text = "Speed: " + speedint.ToString();
-        if (speedint > speedLimit)
+        speedometer.text = speedint.ToString(); //Number
+        lerpvalue = Car.velocity / Car.maxspeed;
+        speedometerPointer.transform.rotation = Quaternion.Euler(new Vector3(0, 0, Mathf.Lerp(122, -119, lerpvalue))); //Pointer rotation
+        if (Car.reverse)
+            Gear.text = "R";
+        else
+            Gear.text = "D";
+        if (speedint > speedLimit) // Over speed limit
             speedLimitUI.SetActive(true);
         else
             speedLimitUI.SetActive(false);
@@ -63,8 +80,7 @@ public class GameController : MonoBehaviour
         if (BeverageCup.progress > 0 && interact && interactMessage == "Clean up")
         {
             cupProgress.gameObject.SetActive(true);
-            intProgress = (int)BeverageCup.progress;
-            cupProgress.GetComponentInChildren<Text>().text = intProgress.ToString();
+            cupProgress.transform.GetChild(0).localScale = new Vector3(BeverageCup.progress/100, 1, 1);
         }
         interact = false;
                
@@ -84,7 +100,7 @@ public class GameController : MonoBehaviour
         //Check if player is in wrong lane
         if (!wrongLane)
         {
-            if(wrongLaneTimer > 0.2f)
+            if(wrongLaneTimer > 0.1f)
                 wrongLaneUI.SetActive(false);
         }
         else
@@ -107,5 +123,19 @@ public class GameController : MonoBehaviour
             redLightTimer = 0;
             redLight = false;
         }
+
+        //If player collided with objects
+        if (collision && collisionTimer < 1)
+        {
+            collisionUI.SetActive(true);
+            collisionTimer += Time.deltaTime;
+        }
+        else
+        {
+            collisionUI.SetActive(false);
+            collisionTimer = 0;
+            collision = false;
+        }
+
     }
 }

@@ -6,9 +6,11 @@ public class TrafficLightController : MonoBehaviour
 {
     private float timer;
     public static int status;
+    public static bool restart;
     // Start is called before the first frame update
     void Start()
     {
+        timer = 15;
         status = 3;
     }
 
@@ -31,5 +33,17 @@ public class TrafficLightController : MonoBehaviour
             status = 5;
         else if (timer < 30) //2 red for all
             status = 6;
+        
+        if (restart)
+        {
+            Restart();
+            restart = false;
+        }
+    }
+
+    private void Restart()
+    {
+        timer = 15;
+        status = 3;
     }
 }

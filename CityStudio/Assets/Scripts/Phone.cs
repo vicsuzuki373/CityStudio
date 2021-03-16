@@ -5,6 +5,7 @@ using UnityEngine;
 public class Phone : MonoBehaviour
 {
     public static float timeDistracted = 0;
+    public static bool restart;
     public GameObject Screen;
 
     private bool isRinging = false;
@@ -17,12 +18,12 @@ public class Phone : MonoBehaviour
         gameObject.GetComponent<AudioSource>().mute = true;
         Screen.SetActive(false);
     }
-    
+
     void Update()
     {
-        if(!isRinging)
+        if (!isRinging)
             PhoneDelay += Time.deltaTime;
-        if(PhoneDelay > 10)
+        if (PhoneDelay > 10)
         {
             random = Random.Range(0, 10);
             if (random > 5)
@@ -32,6 +33,11 @@ public class Phone : MonoBehaviour
                 isRinging = true;
             }
             PhoneDelay = 0;
+        }
+        if (restart)
+        {
+            Restart();
+            restart = false;
         }
     }
 
@@ -52,5 +58,15 @@ public class Phone : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Restart()
+    {
+        gameObject.GetComponent<AudioSource>().Play();
+        gameObject.GetComponent<AudioSource>().mute = true;
+        Screen.SetActive(false);
+        timeDistracted = 0;
+        PhoneDelay = 0;
+        isRinging = false;
     }
 }

@@ -7,9 +7,10 @@ public class GameController : MonoBehaviour
 {
     [Header("Objectives")]
     public GameObject conlinCheckpoint;
+    public GameObject rosslandCheckpoint;
     public GameObject LeftLane;
     public GameObject RightLane;
-    public Text objectiveText;
+    public GameObject Objective;
 
     [Header("Infractions")]
     public GameObject wrongLaneUI;
@@ -27,7 +28,7 @@ public class GameController : MonoBehaviour
     public GameObject collisionUI;
     public static bool collision = false;
     private float collisionTimer = 0;
-    
+
     [Header("UI Gameplay Elements")]
     public GameObject Interact;
     public GameObject cupProgress;
@@ -36,7 +37,9 @@ public class GameController : MonoBehaviour
     public GameObject speedometerPointer;
 
     public static bool interact = false;
-    public static string interactMessage = "E to Interact";
+    public static string interactMessage = "Interact";
+    public static float amountOverSpeed = 0;
+    public static bool restart;
 
     private int intProgress;
     private float speed;
@@ -47,6 +50,7 @@ public class GameController : MonoBehaviour
         wrongLaneUI.SetActive(false);
         redLightUI.SetActive(false);
         speedLimitUI.SetActive(false);
+        collisionUI.SetActive(false);
     }
 
     void Update()
@@ -62,7 +66,10 @@ public class GameController : MonoBehaviour
         else
             Gear.text = "D";
         if (speedint > speedLimit) // Over speed limit
+        {
             speedLimitUI.SetActive(true);
+            amountOverSpeed += Time.deltaTime;
+        }
         else
             speedLimitUI.SetActive(false);
 
@@ -80,10 +87,10 @@ public class GameController : MonoBehaviour
         if (BeverageCup.progress > 0 && interact && interactMessage == "Clean up")
         {
             cupProgress.gameObject.SetActive(true);
-            cupProgress.transform.GetChild(0).localScale = new Vector3(BeverageCup.progress/100, 1, 1);
+            cupProgress.transform.GetChild(0).localScale = new Vector3(BeverageCup.progress / 100, 1, 1);
         }
         interact = false;
-               
+
         //Checkpoint updates
         if (conlinCheckpoint.activeSelf)
         {
@@ -92,7 +99,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            objectiveText.text = "Drive to Rossland Road";
+            Objective.GetComponentInChildren<Text>().text = "Drive to Rossland Road";
             LeftLane.SetActive(false);
             RightLane.SetActive(true);
         }
@@ -100,7 +107,7 @@ public class GameController : MonoBehaviour
         //Check if player is in wrong lane
         if (!wrongLane)
         {
-            if(wrongLaneTimer > 0.1f)
+            if (wrongLaneTimer > 0.1f)
                 wrongLaneUI.SetActive(false);
         }
         else
@@ -137,5 +144,31 @@ public class GameController : MonoBehaviour
             collision = false;
         }
 
+        if (restart)
+        {
+            Restart();
+            restart = false;
+        }
+    }
+
+    private void Restart()
+    {
+        wrongLaneUI.SetActive(false);
+        redLightUI.SetActive(false);
+        speedLimitUI.SetActive(false);
+        collisionUI.SetActive(false);
+        conlinCheckpoint.SetActive(true);
+        rosslandCheckpoint.SetActive(false);
+        Objective.GetComponentInChildren<Text>().text = "Drive to Conlin Road";
+        wrongLane = false;
+        wrongLaneTimer = 1;
+        redLight = false;
+        redLightTimer = 0;
+        lerpvalue = 0;
+        collision = false;
+        collisionTimer = 0;
+        amountOverSpeed = 0;
+        cupProgress.gameObject.SetActive(false);
+        interact = false;
     }
 }

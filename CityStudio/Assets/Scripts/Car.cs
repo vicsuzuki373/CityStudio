@@ -9,17 +9,23 @@ public class Car : MonoBehaviour
     public float acceleration = 15;
 
     public static float maxspeed = 10;
-    public static bool col = false;
     public static bool reverse = false;
     public static float velocity;
+    public static int amountcollided = 0;
+    public static bool restart;
 
     private float rotate;
     private float accelerate;
+    private float collisiondelay;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
 
     public GameObject editorCam;
 
     void Start()
     {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 
     void Update()
@@ -39,9 +45,9 @@ public class Car : MonoBehaviour
             else if ((Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.JoystickButton5)) && velocity < 0.1f)
                 reverse = false;
 
-            if (Input.GetKey(KeyCode.W) && velocity < maxspeed)
+            if (Input.GetKey(KeyCode.W) && velocity < maxspeed + 0.05f)
                 accelerate = acceleration;
-            else if (RT > 0 && velocity < maxspeed) // Controller
+            else if (RT > 0 && velocity < maxspeed + 0.05f) // Controller
                 accelerate = acceleration * RT;
 
             if (Input.GetKey(KeyCode.S) && velocity > 0.2f)
@@ -77,15 +83,38 @@ public class Car : MonoBehaviour
             }
         }
 
-        if (velocity < 0.005f && accelerate == 0)
-            velocity = 0;
         accelerate = 0;
         rotate *= 0.9f;
+
+        collisiondelay += Time.deltaTime;
+
+        if (restart)
+        {
+            Restart();
+            restart = false;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.name != "colliderMesh")
+        if (collision.collider.name != "colliderMesh" && collisiondelay > 0.5f)
+        {
             GameController.collision = true;
+            amountcollided += 1;
+            collisiondelay = 0;
+        }
+    }
+
+    private void Restart()
+    {
+        rotate = 0;
+        accelerate = 0;
+        collisiondelay = 0;
+        reverse = false;
+        velocity = 0;
+        gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+        amountcollided = 0;
+        transform.position = startPosition;
+        transform.rotation = startRotation;
     }
 }

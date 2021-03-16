@@ -8,7 +8,8 @@ public class RosslandCheckpoint : MonoBehaviour
     {
         if (other.attachedRigidbody)
         {
-            Debug.Log("gameover");
+            MenuController.gameover = true;
+            gameObject.SetActive(false);
         }
     }
 }

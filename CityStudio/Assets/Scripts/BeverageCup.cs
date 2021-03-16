@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class BeverageCup : MonoBehaviour
 {
-    public static float timeDistracted = 0;
     public GameObject Cup1;
     public GameObject Cup2;
     private int random;
+
+    public static float timeDistracted = 0;
     public static float progress;
+    public static bool restart;
 
     void Start()
     {
@@ -21,6 +23,11 @@ public class BeverageCup : MonoBehaviour
         if (progress > 0)
             progress -= 20 * Time.deltaTime;
 
+        if (restart)
+        {
+            Restart();
+            restart = false;
+        }
     }
 
     private void OnMouseOver()
@@ -58,5 +65,13 @@ public class BeverageCup : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void Restart()
+    {
+        timeDistracted = 0;
+        progress = 0;
+        Cup2.SetActive(false);
+        Cup1.SetActive(true);
     }
 }

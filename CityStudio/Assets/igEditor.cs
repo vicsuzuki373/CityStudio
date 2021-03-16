@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-
+using UnityEngine.InputSystem;
 public class igEditor : MonoBehaviour
 {
     [Header("Raycast Systems")]
@@ -37,7 +37,7 @@ public class igEditor : MonoBehaviour
     Bloom worldBloom;
     public Light worldLightSun;
     public Light worldLightMoon;
-    
+
 
     [Header("Camera")]
     public GameObject overheadCam;
@@ -49,6 +49,14 @@ public class igEditor : MonoBehaviour
     public float maxCamHeight;
     public float minCamHeight;
     bool forward;
+
+
+    [Header("Controller")]
+    [Range(0.01f, 0.5f)]
+    public float autoScrollSpeed;
+    float vertical, horizontal;
+    bool aButton, bButton, yButton, rightStickButton, dup, ddown;
+    List<Scrollbar> dropDownList;
 
     public static bool startEditor = false;
 
@@ -62,6 +70,17 @@ public class igEditor : MonoBehaviour
         camSwitch = true;
         forward = true;
         uiRaycast = Canvas.GetComponent<GraphicRaycaster>();
+
+        vertical = 0;
+        horizontal = 0;
+        aButton = false;
+        bButton = false;
+        yButton = false;
+        rightStickButton = false;
+        dup = false;
+        ddown = false;
+
+        dropDownList = new List<Scrollbar>();
     }
 
     void Update()
@@ -73,6 +92,46 @@ public class igEditor : MonoBehaviour
     private void FixedUpdate()
     {
         cameraControls();
+    }
+
+    void getControllerInput()
+    {
+        if (Gamepad.current == null)
+        {//reset the controller
+            vertical = 0;
+            horizontal = 0;
+            aButton = false;
+            bButton = false;
+            yButton = false;
+            rightStickButton = false;
+            dup = false;
+            ddown = false;
+            return;
+        }
+        
+        vertical = Gamepad.current.rightStick.ReadValue().y;
+        horizontal = Gamepad.current.rightStick.ReadValue().x;
+        aButton = Gamepad.current.aButton.isPressed;
+        bButton = Gamepad.current.bButton.isPressed;
+        yButton = Gamepad.current.yButton.isPressed;
+        rightStickButton = Gamepad.current.rightStickButton.isPressed;
+        dup = Gamepad.current.dpad.up.isPressed;
+        ddown = Gamepad.current.dpad.down.isPressed;
+
+        dropDownPrompt.GetComponentsInChildren(dropDownList);
+        autoScrollDropDown();
+    }
+
+    void autoScrollDropDown()
+    {
+        foreach(Scrollbar bar in dropDownList)
+        {
+            bar.value -= (autoScrollSpeed * bar.size) * Time.deltaTime;
+            if (bar.value <= 0.0f)
+            {
+                StartCoroutine("redoAutoScroll", 2.0f);
+            }
+        }
     }
 
     void cameraSwitch()
@@ -94,63 +153,64 @@ public class igEditor : MonoBehaviour
         //Cursor.lockState = CursorLockMode.None;
 
         selectorRC();
+        getControllerInput();
 
-        if(overheadCam.transform.position.z <= -385.0f)
+        if (overheadCam.transform.position.z <= -385.0f)
         {
             if (forward == true)
                 overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, Mathf.LerpAngle(overheadCam.transform.eulerAngles.y, 150.0f, Time.deltaTime * 15.0f), overheadCam.transform.eulerAngles.z);
             else
             {
-                Debug.Log("scream a bit");
                 overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, Mathf.LerpAngle(overheadCam.transform.eulerAngles.y, -30.0f, Time.deltaTime * 15.0f), overheadCam.transform.eulerAngles.z);
             }
         }
         else
         {
-            if(forward == true)
+            if (forward == true)
                 overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, Mathf.LerpAngle(overheadCam.transform.eulerAngles.y, 180.0f, Time.deltaTime * 15.0f), overheadCam.transform.eulerAngles.z);
             else
                 overheadCam.transform.eulerAngles = new Vector3(overheadCam.transform.eulerAngles.x, Mathf.LerpAngle(0.0f, overheadCam.transform.eulerAngles.y, Time.deltaTime * 15.0f), overheadCam.transform.eulerAngles.z);
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) || rightStickButton)
         {
             camSpeedMulti = camSpeedMaxMulti;
         }
         else
         { camSpeedMulti = 1.0f; }
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || vertical >= 0.1f)
         {
             overheadCam.transform.Translate(Vector3.forward * Time.deltaTime * camSpeed * camSpeedMulti, Space.Self);
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S) || vertical <= -0.1f)
         {
             overheadCam.transform.Translate(-Vector3.forward * Time.deltaTime * camSpeed * camSpeedMulti, Space.Self);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || horizontal <= -0.1f)
         {
             overheadCam.transform.Translate(-Vector3.right * Time.deltaTime * camSpeed * camSpeedMulti, Space.Self);
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D) || horizontal >= 0.1f)
         {
             overheadCam.transform.Translate(Vector3.right * Time.deltaTime * camSpeed * camSpeedMulti, Space.Self);
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) || yButton)
         {
             forward = !forward;
         }
 
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0 || dup)
         {
             overheadCam.transform.Translate(Vector3.up * Time.deltaTime * camSpeed, Space.World);
         }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0 || ddown)
         {
             overheadCam.transform.Translate(Vector3.down * Time.deltaTime * camSpeed, Space.World);
         }
+
         overheadCam.transform.position = new Vector3(overheadCam.transform.position.x, Mathf.Clamp(overheadCam.transform.position.y, minCamHeight, maxCamHeight), overheadCam.transform.position.z);
     }
 
@@ -162,7 +222,7 @@ public class igEditor : MonoBehaviour
         uiRaycast.Raycast(uiPointerEventData, uiResults);
  
 
-        if (Input.GetMouseButton(0) && uiResults.Count == 0) //leftclick
+        if ((Input.GetMouseButton(0) || aButton) && uiResults.Count == 0) //leftclick
         {
             ray = overheadCam.GetComponentInChildren<Camera>().ScreenPointToRay(Input.mousePosition); // raycast from screen position of mouse
             Physics.Raycast(ray, out hit);
@@ -188,7 +248,7 @@ public class igEditor : MonoBehaviour
                 }
             }
         }
-        else if (Input.GetMouseButton(1) && uiResults.Count == 0) //rightclick
+        else if ((Input.GetMouseButton(1) || bButton) && uiResults.Count == 0) //rightclick
         {
             selected = null; // unselect
             entityTypeSelection.text = "Nothing Selected";
@@ -323,5 +383,15 @@ public class igEditor : MonoBehaviour
         }
         else
             radioChannelPrompt.GetComponentInChildren<Text>().text = radioChannelPrompt.options[radioChannelPrompt.value].text;
+    }
+
+    private IEnumerator redoAutoScroll(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        foreach (Scrollbar bar in dropDownList)
+        {
+            bar.value = 1.0f;
+        }
     }
 }

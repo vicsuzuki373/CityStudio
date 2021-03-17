@@ -19,7 +19,7 @@ public class TrafficLightChecker : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody && TrafficLightController.status > 2 && delay > 5)
+        if (other.name == "car" && TrafficLightController.status > 2 && delay > 5)
         {
             GameController.redLight = true;
             amount += 1;

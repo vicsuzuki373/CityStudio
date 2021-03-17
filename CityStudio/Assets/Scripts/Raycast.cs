@@ -34,7 +34,7 @@ public class Raycast : MonoBehaviour
         }
         else
         {
-            if (hovered)
+            if (hovered && target != null)
                 target.SendMessage("OnMouseExit", SendMessageOptions.DontRequireReceiver);
             hovered = false;
         }

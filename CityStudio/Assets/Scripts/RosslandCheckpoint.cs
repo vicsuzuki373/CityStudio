@@ -6,7 +6,7 @@ public class RosslandCheckpoint : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody)
+        if (other.name == "car")
         {
             MenuController.gameover = true;
             gameObject.SetActive(false);

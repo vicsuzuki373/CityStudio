@@ -8,7 +8,7 @@ public class ConlinCheckpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody)
+        if(other.name == "car")
         {
             RosslandCheckpoint.SetActive(true);
             gameObject.SetActive(false);

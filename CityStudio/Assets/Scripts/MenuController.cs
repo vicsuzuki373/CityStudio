@@ -36,7 +36,7 @@ public class MenuController : MonoBehaviour
     public Text Name;
 
     private bool isPlaying = false;
-    public static bool paused = false;
+    public static bool paused = true;
     public static bool gameover = false;
     private string sessionspath = "Assets/Resources/sessions.txt";
 
@@ -117,6 +117,7 @@ public class MenuController : MonoBehaviour
     {
         Restart();
         isPlaying = true;
+        paused = false;
         MenuCamera.SetActive(false);
         MenuPlay.SetActive(false);
         MenuEditor.SetActive(false);
@@ -159,6 +160,7 @@ public class MenuController : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(MenuPlay);
         Restart();
         isPlaying = false;
+        paused = true;
         MenuCamera.SetActive(true);
         MenuPlay.SetActive(true);
         MenuEditor.SetActive(true);

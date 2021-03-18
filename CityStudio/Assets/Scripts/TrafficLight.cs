@@ -9,6 +9,10 @@ public class TrafficLight : MonoBehaviour
     private GameObject green;
     private GameObject yellow;
     private GameObject red;
+
+    public intersection pedestrians;
+    public int pedestrianRoadDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +29,14 @@ public class TrafficLight : MonoBehaviour
         }
         if (opposite)
             red.SetActive(true);
+    }
+
+    void activatePedestrianCrossing(int _pedestrianRoadDirection)
+    {
+        if (green.activeSelf && pedestrians != null)
+            pedestrians.toggleCrossWalk(_pedestrianRoadDirection, true);
+        else if(pedestrians != null)
+            pedestrians.toggleCrossWalk(_pedestrianRoadDirection, false);
     }
 
     // Update is called once per frame
@@ -98,5 +110,8 @@ public class TrafficLight : MonoBehaviour
                         break;
                 }
         }
+
+        activatePedestrianCrossing(pedestrianRoadDirection);
     }
+
 }

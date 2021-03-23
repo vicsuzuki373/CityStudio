@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\TrafficLightChecker.cs" />
+    <Compile Include="Assets\pedestrians.cs" />
     <Compile Include="Assets\Scripts\TrafficLightController.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\fileExplorer.cs" />
@@ -67,9 +68,11 @@
     <Compile Include="Assets\Scripts\Radio\RadioPlayorPause.cs" />
     <Compile Include="Assets\Scripts\ConlinCheckpoint.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
+    <Compile Include="Assets\pedestrianObject.cs" />
     <Compile Include="Assets\Scripts\Radio\RadioNext.cs" />
     <Compile Include="Assets\Scripts\Radio\RadioPrevious.cs" />
     <Compile Include="Assets\Scripts\BeverageCup.cs" />
+    <Compile Include="Assets\intersection.cs" />
     <Compile Include="Assets\igEditor.cs" />
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
     <Compile Include="Assets\igEditorController.cs" />
@@ -77,9 +80,7 @@
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\CarAI\CarAI.cs" />
     <Compile Include="Assets\Scripts\Raycast.cs" />
-    <Compile Include="Assets\intersection.cs" />
-    <Compile Include="Assets\pedestrianObject.cs" />
-    <Compile Include="Assets\pedestrians.cs" />
+    <Compile Include="Assets\phoneTexting.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -745,13 +746,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="NavMeshComponents.csproj">
-      <Project>{6639FA0B-E167-7ADC-7841-99C4EF0B1C82}</Project>
-      <Name>NavMeshComponents</Name>
-    </ProjectReference>
     <ProjectReference Include="NavMeshComponentsEditor.csproj">
       <Project>{D004F38A-5A19-87AA-B8E0-75729522C547}</Project>
       <Name>NavMeshComponentsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponents.csproj">
+      <Project>{6639FA0B-E167-7ADC-7841-99C4EF0B1C82}</Project>
+      <Name>NavMeshComponents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

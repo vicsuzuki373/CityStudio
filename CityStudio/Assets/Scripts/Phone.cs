@@ -21,23 +21,26 @@ public class Phone : MonoBehaviour
 
     void Update()
     {
-        if (!isRinging)
-            PhoneDelay += Time.deltaTime;
-        if (PhoneDelay > 10)
+        if(!gameObject.GetComponent<phoneTexting>().isInHand)
         {
-            random = Random.Range(0, 10);
-            if (random > 5)
+            if (!isRinging)
+                PhoneDelay += Time.deltaTime;
+            if (PhoneDelay > 10)
             {
-                gameObject.GetComponent<AudioSource>().mute = false;
-                Screen.SetActive(true);
-                isRinging = true;
+                random = Random.Range(0, 10);
+                if (random > 5)
+                {
+                    gameObject.GetComponent<AudioSource>().mute = false;
+                    Screen.SetActive(true);
+                    isRinging = true;
+                }
+                PhoneDelay = 0;
             }
-            PhoneDelay = 0;
-        }
-        if (restart)
-        {
-            Restart();
-            restart = false;
+            if (restart)
+            {
+                Restart();
+                restart = false;
+            }
         }
     }
 
@@ -56,6 +59,10 @@ public class Phone : MonoBehaviour
                     Screen.SetActive(false);
                     isRinging = false;
                 }
+            }
+            else if(Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.JoystickButton0))
+            {
+                gameObject.GetComponent<phoneTexting>().startTexting();
             }
         }
     }

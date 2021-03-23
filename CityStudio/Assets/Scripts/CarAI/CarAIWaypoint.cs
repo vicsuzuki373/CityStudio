@@ -5,4 +5,5 @@ using UnityEngine;
 public class CarAIWaypoint : MonoBehaviour
 {
     public bool trafficlightwp = false;
+    public bool spawncar = false;
 }

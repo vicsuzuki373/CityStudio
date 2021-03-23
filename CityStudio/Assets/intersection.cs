@@ -27,30 +27,36 @@ public class intersection : MonoBehaviour
             );
     }
 
-    public void toggleCrossWalk(int direction, bool active)
+    public void toggleCrossWalk(int direction)
     {
-        foreach(GameObject corner in corners)
+        foreach (GameObject corner in corners)
         {
-            switch(direction)
+            switch (direction)
             {
+                case 0:
+                    corner.transform.Find("roadA").gameObject.SetActive(false);
+                    corner.transform.Find("roadB").gameObject.SetActive(false);
+                    break;
                 case 1:
-                    corner.transform.Find("roadA").gameObject.SetActive(active);
+                    corner.transform.Find("roadA").gameObject.SetActive(false);
+                    corner.transform.Find("roadB").gameObject.SetActive(true);
                     break;
                 case 2:
-                    corner.transform.Find("roadB").gameObject.SetActive(active);
+                    corner.transform.Find("roadA").gameObject.SetActive(true);
+                    corner.transform.Find("roadB").gameObject.SetActive(false);
                     break;
             }
-            
+
         }
     }
 
     void Update()
     {
-        if(getDistanceToPlayer() <= pool.distanceToSpawn && playerNearby == false) // get when vehicle gets close?
+        if (getDistanceToPlayer() <= pool.distanceToSpawn && playerNearby == false) // get when vehicle gets close?
         {
             playerNearby = true;
 
-            foreach(GameObject corner in corners)
+            foreach (GameObject corner in corners)
             {
                 int amountSpawn = Random.Range(0, maxSpawnPerCorner);
                 minX = corner.transform.position.x - corner.GetComponent<Collider>().bounds.extents.x;
@@ -59,7 +65,7 @@ public class intersection : MonoBehaviour
                 minZ = corner.transform.position.z - corner.GetComponent<Collider>().bounds.extents.z;
                 maxZ = corner.transform.position.z + corner.GetComponent<Collider>().bounds.extents.z;
 
-                
+
 
                 for (int i = 0; i < amountSpawn; i++)
                 {
@@ -67,7 +73,7 @@ public class intersection : MonoBehaviour
                 }
             }
         }
-        else if(getDistanceToPlayer() > pool.distanceToSpawn)
+        else if (getDistanceToPlayer() > pool.distanceToSpawn)
         {
             playerNearby = false;
         }

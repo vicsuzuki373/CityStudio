@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CarAI : MonoBehaviour
 {
+    public bool restart = false;
     public static int maxamountcar = 1000;
-    public static bool restart = false;
     public float spawndelay = 10;
     public bool opposite = false;
     public float speed = 3;
     public GameObject playercar;
 
     public List<GameObject> cars = new List<GameObject>();
-    private static int amountcar = 0;
+    public static int amountcar = 0;
     private List<GameObject> waypoints = new List<GameObject>();
 
     private List<GameObject> spawnedcars = new List<GameObject>();
@@ -59,8 +59,20 @@ public class CarAI : MonoBehaviour
 
             for (int i = 0; i < spawnedcars.Count; i++)
             {
+                if (Vector3.Distance(spawnedcars[i].transform.position, playercar.transform.position) > 50)
+                {
+                    foreach (Renderer r in spawnedcars[i].GetComponentsInChildren<Renderer>())
+                        r.enabled = false;
+                }
+                else
+                {
+                    foreach (Renderer r in spawnedcars[i].GetComponentsInChildren<Renderer>())
+                        r.enabled = true;
+                }
+
                 if (!spawnedcars[i].GetComponentInChildren<CarAICollision>().stop && !spawnedcars[i].GetComponentInChildren<CarAICollision>().forcestop)
                     spawnedcars[i].transform.Translate(Vector3.forward * Time.deltaTime * speed);
+
                 if (Vector3.Distance(spawnedcars[i].transform.position, waypoints[nextwaypoint[i]].transform.position) < 0.5f)
                 {
                     if (waypoints[nextwaypoint[i]].GetComponent<CarAIWaypoint>().trafficlightwp && !opposite && TrafficLightController.status != 1)
@@ -82,10 +94,6 @@ public class CarAI : MonoBehaviour
                             spawnedcars[i].transform.LookAt(waypoints[nextwaypoint[i]].transform.position);
                     }
                 }
-                if (Vector3.Distance(spawnedcars[i].transform.position, playercar.transform.position) > 40)
-                    spawnedcars[i].SetActive(false);
-                else
-                    spawnedcars[i].SetActive(true);
             }
 
         }
@@ -101,17 +109,16 @@ public class CarAI : MonoBehaviour
         random = Random.Range(0, cars.Count - 1);
         for (int i = 0; i < spawnedcars.Count; i++)
         {
-            Destroy(spawnedcars[i]);
-            spawnedcars.RemoveAt(i);
+            GameObject temp = spawnedcars[i];
+            Destroy(temp);
         }
         spawnedcars.Clear();
         spawnedcars.Add((GameObject)Instantiate(cars[random], transform.position, transform.rotation));
+        amountcar += 1;
         nextwaypoint.Clear();
         nextwaypoint.Add(0);
-        amountcar = 1;
         for (int i = 0; i < transform.childCount; i++)
         {
-            waypoints.Add(transform.GetChild(i).gameObject);
             if (transform.GetChild(i).gameObject.GetComponent<CarAIWaypoint>().spawncar)
             {
                 spawnedcars.Add((GameObject)Instantiate(cars[random], transform.GetChild(i).position, transform.rotation));

@@ -54,11 +54,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\TrafficLightChecker.cs" />
-    <Compile Include="Assets\phoneTexting.cs" />
-    <Compile Include="Assets\pedestrians.cs" />
+    <Compile Include="Assets\Scripts\phoneTexting.cs" />
+    <Compile Include="Assets\Scripts\pedestrians.cs" />
     <Compile Include="Assets\Scripts\TrafficLightController.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
-    <Compile Include="Assets\fileExplorer.cs" />
+    <Compile Include="Assets\Scripts\fileExplorer.cs" />
     <Compile Include="Assets\Scripts\CarAI\CarAIWaypoint.cs" />
     <Compile Include="Assets\Scripts\CarAI\CarAICollision.cs" />
     <Compile Include="Assets\Scripts\Phone.cs" />
@@ -69,15 +69,15 @@
     <Compile Include="Assets\Scripts\Radio\RadioPlayorPause.cs" />
     <Compile Include="Assets\Scripts\ConlinCheckpoint.cs" />
     <Compile Include="Assets\Scripts\Car.cs" />
-    <Compile Include="Assets\pedestrianObject.cs" />
+    <Compile Include="Assets\Scripts\pedestrianObject.cs" />
     <Compile Include="Assets\Scripts\Radio\RadioNext.cs" />
     <Compile Include="Assets\Scripts\Radio\RadioPrevious.cs" />
     <Compile Include="Assets\Scripts\BeverageCup.cs" />
-    <Compile Include="Assets\intersection.cs" />
-    <Compile Include="Assets\igEditor.cs" />
+    <Compile Include="Assets\Scripts\intersection.cs" />
+    <Compile Include="Assets\Scripts\igEditor.cs" />
     <Compile Include="Assets\Scripts\TrafficLight.cs" />
-    <Compile Include="Assets\igEditorController.cs" />
-    <Compile Include="Assets\igEditorUI.cs" />
+    <Compile Include="Assets\Scripts\igEditorController.cs" />
+    <Compile Include="Assets\Scripts\igEditorUI.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\CarAI\CarAI.cs" />
     <Compile Include="Assets\Scripts\Raycast.cs" />

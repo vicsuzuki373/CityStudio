@@ -20,9 +20,9 @@ public class MenuController : MonoBehaviour
     public GameObject CarCanvas;
     public GameObject phone;
     public GameObject radio;
+    public GameObject carspawner;
 
     [Header("Buttons")]
-    public GameObject EditorReturn;
     public GameObject GameResume;
     public GameObject GameRestart;
     public GameObject GameExit;
@@ -67,7 +67,6 @@ public class MenuController : MonoBehaviour
                 {
                     EventSystem.current.SetSelectedGameObject(null);
                     EventSystem.current.SetSelectedGameObject(GameResume);
-
                     GameResume.SetActive(true);
                     GameRestart.SetActive(true);
                     GameExit.SetActive(true);
@@ -111,6 +110,15 @@ public class MenuController : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0;
         }
+
+        float LeftJoystickY = Input.GetAxis("LeftJoystickY");
+        if(LeftJoystickY < -0.5f && MenuPlay.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(MenuPlay);
+        else if(LeftJoystickY < -0.5f && GameResume.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(GameResume);
+        else if (LeftJoystickY < -0.5f && Results.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(GameRestart);
+
     }
 
     public void Play()
@@ -130,7 +138,6 @@ public class MenuController : MonoBehaviour
     public void Editor()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(EditorReturn);
         MenuCamera.SetActive(false);
         MenuPlay.SetActive(false);
         MenuEditor.SetActive(false);
@@ -192,6 +199,12 @@ public class MenuController : MonoBehaviour
         Car.restart = true;
         GameController.restart = true;
         TrafficLightController.restart = true;
+        CarAI.amountcar = 0;
+        CarCanvas.SetActive(true);
+        for (int i = 0; i < carspawner.transform.childCount; i++)
+        {
+            carspawner.transform.GetChild(i).GetComponent<CarAI>().restart = true;
+        }
         Results.SetActive(false);
         isPlaying = true;
         gameover = false;

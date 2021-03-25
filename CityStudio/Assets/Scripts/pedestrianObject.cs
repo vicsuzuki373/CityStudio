@@ -79,4 +79,13 @@ public class pedestrianObject : MonoBehaviour
             catch { }
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player")
+        {
+            poolParent.stashPedestrian(this.gameObject);
+        }
+    }
+
 }

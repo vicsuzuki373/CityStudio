@@ -7,6 +7,8 @@ using TMPro;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.InputSystem;
+using UnityEngine.Video;
+
 public class igEditor : MonoBehaviour
 {
     [Header("Raycast Systems")]
@@ -60,6 +62,13 @@ public class igEditor : MonoBehaviour
 
     public static bool startEditor = false;
 
+    [Header("ToolTips")]
+    public GameObject TTwindow;
+    TextMeshProUGUI TTtext;
+    public List<VideoClip> TTclips;
+    VideoPlayer TTplayer;
+    public Toggle TTtoggle;
+
     void Start()
     {
         lightPieces = new List<Light>();
@@ -81,12 +90,16 @@ public class igEditor : MonoBehaviour
         ddown = false;
 
         dropDownList = new List<Scrollbar>();
+
+        TTtext = TTwindow.GetComponentInChildren<TextMeshProUGUI>();
+        TTplayer = TTwindow.GetComponentInChildren<VideoPlayer>();
     }
 
     void Update()
     {
         cameraSwitch();
         radioChannel();
+        TTwindow.SetActive(TTtoggle.isOn);
     }
 
     private void FixedUpdate()
@@ -148,9 +161,8 @@ public class igEditor : MonoBehaviour
 
     void cameraControls()
     {
-        //if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
-        //{ Cursor.lockState = CursorLockMode.Locked; return; }
-        //Cursor.lockState = CursorLockMode.None;
+        if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
+        {  return; }
 
         selectorRC();
         getControllerInput();
@@ -383,6 +395,33 @@ public class igEditor : MonoBehaviour
         }
         else
             radioChannelPrompt.GetComponentInChildren<Text>().text = radioChannelPrompt.options[radioChannelPrompt.value].text;
+    }
+
+    public void TTbuttons(int index)
+    {
+        switch(index)
+        {
+            case 0:
+                TTplayer.clip = TTclips[index];
+                TTtext.text = "Use the keyboard keys; W, A, S, D to move editor camera around the scene. Holding Shift key will allow for faster movement.";
+                break;
+            case 1:
+                TTplayer.clip = TTclips[index];
+                TTtext.text = "Use the mouse scrollwheel to move editor camera higher and lower in the scene. The camera can continue to ascend / descend until a maximum offset is reached.";
+                break;
+            case 2:
+                TTplayer.clip = TTclips[index];
+                TTtext.text = "Use the mouse left click to select editable objects in the scene. Once an object is selected continue using mouse left click to move the object or select anew.";
+                break;
+            case 3:
+                TTplayer.clip = TTclips[index];
+                TTtext.text = "Use the mouse right click to deselect editable objects in the scene. Once an object is deselected they will no longer be edited or moved until reselected.";
+                break;
+            default:
+                TTplayer.clip = TTclips[index];
+                TTtext.text = "Use the keyboard keys; W, A, S, D to move editor camera around the scene. Holding Shift key will allow for faster movement.";
+                break;
+        }
     }
 
     private IEnumerator redoAutoScroll(float waitTime)

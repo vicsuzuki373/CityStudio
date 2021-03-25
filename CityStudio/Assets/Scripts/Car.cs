@@ -55,12 +55,15 @@ public class Car : MonoBehaviour
             else if (LT > 0 && velocity > 0.2f) // Controller
                 accelerate = -acceleration * 2 * LT;
 
-            if (Input.GetKey(KeyCode.A) && velocity > 0.01f && rotate > -maxsteer)
-                rotate -= steer * Time.deltaTime;
-            if (Input.GetKey(KeyCode.D) && velocity > 0.01f && rotate < maxsteer)
-                rotate += steer * Time.deltaTime;
             if (velocity > 0.01f && rotate > -maxsteer) // Controller
-                rotate += steer * 1.5f * Time.deltaTime * LeftJoystick;
+            {
+                if(LeftJoystick != 0)
+                    rotate += steer * Time.deltaTime * LeftJoystick;
+                if (Input.GetKey(KeyCode.A))
+                    rotate -= steer * Time.deltaTime;
+                if (Input.GetKey(KeyCode.D))
+                    rotate += steer * Time.deltaTime;
+            }
         }
 
         if (!reverse)

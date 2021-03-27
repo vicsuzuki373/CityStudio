@@ -200,6 +200,8 @@ public class MenuController : MonoBehaviour
         GameController.restart = true;
         TrafficLightController.restart = true;
         CarAI.amountcar = 0;
+        pedestrians.restart = true;
+
         CarCanvas.SetActive(true);
         for (int i = 0; i < carspawner.transform.childCount; i++)
         {

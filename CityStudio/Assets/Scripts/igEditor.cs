@@ -30,7 +30,9 @@ public class igEditor : MonoBehaviour
     public List<string> radioChanOptions;
     public GameObject billboardPrefab;
     public GameObject deletePrompt;
-
+    public GameObject jayWalkerPrefab;
+    public GameObject flipPrompt;
+    bool jayDirection;
 
     [Header("Post Processing")]
     public GameObject streetLights;
@@ -79,6 +81,7 @@ public class igEditor : MonoBehaviour
         camSwitch = true;
         forward = true;
         uiRaycast = Canvas.GetComponent<GraphicRaycaster>();
+        jayDirection = true;
 
         vertical = 0;
         horizontal = 0;
@@ -246,18 +249,47 @@ public class igEditor : MonoBehaviour
 
                 switchSelection();
             }
-            else if (selected != null && selected.GetComponent<igEditorUI>().entityType != 3)
+            else if (selected != null && selected.GetComponent<igEditorUI>().entityType != 3) // 3 is radio, cant move that
             {
-                if (selected.transform.position.z <= -385.0f)
+                switch(selected.GetComponent<igEditorUI>().entityType)
                 {
-                    selected.transform.position = hit.point;
-                    selected.transform.rotation = Quaternion.Euler(-90.0f, 0.0f, -30.0f);
+                    case 1:
+                        if (selected.transform.position.z <= -385.0f)
+                        {
+                            selected.transform.position = hit.point;
+                            selected.transform.rotation = Quaternion.Euler(-90.0f, 0.0f, -30.0f);
+                        }
+                        else
+                        {
+                            selected.transform.position = hit.point;
+                            selected.transform.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
+                        }
+                        break;
+                    case 2:
+                        selected.transform.position = hit.point;
+                        break;
+                    case 4:
+                        if (selected.transform.position.z <= -385.0f)
+                        {
+                            selected.transform.position = new Vector3(hit.point.x, hit.point.y + selected.GetComponent<Collider>().bounds.extents.y, hit.point.z);
+                            selected.GetComponent<pedestrianObject>().initialJayWalkerPosi = selected.transform.position;
+                            if(jayDirection)
+                                selected.transform.rotation = Quaternion.Euler(0, -120.0f, -0);
+                            else
+                                selected.transform.rotation = Quaternion.Euler(0, 60.0f, -0);
+                        }
+                        else
+                        {
+                            selected.transform.position = new Vector3(hit.point.x, hit.point.y + selected.GetComponent<Collider>().bounds.extents.y, hit.point.z);
+                            selected.GetComponent<pedestrianObject>().initialJayWalkerPosi = selected.transform.position;
+                            if (jayDirection)
+                                selected.transform.rotation = Quaternion.Euler(0, -90.0f, 0.0f);
+                            else
+                                selected.transform.rotation = Quaternion.Euler(0, 90.0f, 0.0f);
+                        }
+                        break;
                 }
-                else
-                {
-                    selected.transform.position = hit.point;
-                    selected.transform.rotation = Quaternion.Euler(-90.0f, 0.0f, 0.0f);
-                }
+                
             }
         }
         else if ((Input.GetMouseButton(1) || bButton) && uiResults.Count == 0) //rightclick
@@ -279,6 +311,7 @@ public class igEditor : MonoBehaviour
                 //VideoPlayerPrompt.SetActive(true); // set active for this case and deactivate all irrelevant UI fields
                 SpeedNumberPrompt.SetActive(false);
                 dropDownPrompt.SetActive(true);
+                flipPrompt.SetActive(false);
                 deletePrompt.SetActive(true);
                 radioChannelPrompt.gameObject.SetActive(false);
                 break;
@@ -286,19 +319,29 @@ public class igEditor : MonoBehaviour
                 //VideoPlayerPrompt.SetActive(false);
                 SpeedNumberPrompt.SetActive(true);
                 dropDownPrompt.SetActive(false);
+                flipPrompt.SetActive(false);
                 deletePrompt.SetActive(false);
                 radioChannelPrompt.gameObject.SetActive(false);
                 break;
             case 3:
                 SpeedNumberPrompt.SetActive(false);
                 dropDownPrompt.SetActive(true);
+                flipPrompt.SetActive(false);
                 deletePrompt.SetActive(false);
                 radioChannelPrompt.gameObject.SetActive(true);
+                break;
+            case 4:
+                SpeedNumberPrompt.SetActive(false);
+                dropDownPrompt.SetActive(false);
+                flipPrompt.SetActive(true);
+                deletePrompt.SetActive(true);
+                radioChannelPrompt.gameObject.SetActive(false);
                 break;
             default:
                 //VideoPlayerPrompt.SetActive(false); // set everything inactive if there is an err in entityType
                 SpeedNumberPrompt.SetActive(false);
                 dropDownPrompt.SetActive(false);
+                flipPrompt.SetActive(false);
                 deletePrompt.SetActive(false);
                 radioChannelPrompt.gameObject.SetActive(false);
                 break;
@@ -322,6 +365,8 @@ public class igEditor : MonoBehaviour
         }
         catch { Debug.Log("error in editinfo"); }
     }
+
+
 
     public void toggleLight()
     {
@@ -370,7 +415,22 @@ public class igEditor : MonoBehaviour
         switchSelection();
     }
 
-    public void deleteBillboard()
+    public void toggleNewJayWalker()
+    {
+        selected = Instantiate(jayWalkerPrefab);
+        selected.transform.parent = GameObject.Find("pedestrianPool").transform;
+        selected.SetActive(true);
+        selected.name = jayWalkerPrefab.name;
+        entityTypeSelection.text = selected.name;
+        switchSelection();
+    }
+
+    public void changeJayDirection()
+    {
+        jayDirection = !jayDirection;
+    }
+
+    public void delete()
     {
         Destroy(selected);
         selected = null;
@@ -395,6 +455,22 @@ public class igEditor : MonoBehaviour
         }
         else
             radioChannelPrompt.GetComponentInChildren<Text>().text = radioChannelPrompt.options[radioChannelPrompt.value].text;
+    }
+
+    public void changeSeed(string val)
+    {
+        List<char> characters = new List<char>();
+        characters.AddRange(val);
+
+        int output = 0;
+
+        foreach(char chars in characters)
+        {
+            output += (int)chars;
+        }
+
+        Random.InitState(output);
+        Debug.Log("Random seed set to: " + output);
     }
 
     public void TTbuttons(int index)

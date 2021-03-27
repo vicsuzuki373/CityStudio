@@ -23,7 +23,7 @@ public class Raycast : MonoBehaviour
     void Update()
     {
         RaycastHit hit = new RaycastHit();
-        Ray ray = gameObject.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        Ray ray = new Ray(gameObject.transform.position, gameObject.transform.forward);
 
         if (Physics.Raycast(ray, out hit, 10))
         {
@@ -53,16 +53,12 @@ public class Raycast : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, hit.point) < 0.75f)
             {
-                worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 25.0f, Time.deltaTime * focalShiftSpeed);
                 worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 0.2f, Time.deltaTime * focalShiftSpeed);
-                //Debug.Log("near");
 
             } //near
             else
             {
-                worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 20.0f, Time.deltaTime * focalShiftSpeed);
                 worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 15f, Time.deltaTime * focalShiftSpeed);
-                //Debug.Log("far");
             } //far
         }
         //Debug.Log(Vector3.Distance(transform.position, hit.point));

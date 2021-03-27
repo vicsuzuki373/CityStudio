@@ -8,7 +8,7 @@ public class igEditorUI : MonoBehaviour
 {
     List<VideoPlayer> videoPlayer;
     TextMeshPro speedNum;
-    public int entityType; // 1 - billboard, 2 - speedsign
+    public int entityType; // 1 - billboard, 2 - speedsign, 3 - radio, 4 - jaywalker
     
     void Start()
     {  switch (entityType)

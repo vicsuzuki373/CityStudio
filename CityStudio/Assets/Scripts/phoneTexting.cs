@@ -72,6 +72,7 @@ public class phoneTexting : MonoBehaviour
         if (Gamepad.current == null)
             Cursor.lockState = CursorLockMode.None;
         MouseLook.stop = true;
+        autoFocalShift.pauseFocalShift = true;
 
         miniGameDisplay.SetActive(true);
         screen.SetActive(true);
@@ -83,9 +84,7 @@ public class phoneTexting : MonoBehaviour
 
         worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 0.1f, Time.deltaTime * focalShiftSpeed);
         worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 5.0f, Time.deltaTime * focalShiftSpeed);
-
-        autoFocalShift.pauseFocalShift = true;
-
+        
         gameObject.GetComponent<AudioSource>().clip = correctAnswer;
         gameObject.GetComponent<AudioSource>().mute = false;
         gameObject.GetComponent<AudioSource>().loop = false;
@@ -100,6 +99,7 @@ public class phoneTexting : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         MouseLook.stop = false;
+        autoFocalShift.pauseFocalShift = false;
 
         miniGameDisplay.SetActive(false);
         screen.SetActive(false);
@@ -109,7 +109,8 @@ public class phoneTexting : MonoBehaviour
         gameObject.transform.localPosition = defaultPos;
         gameObject.transform.localRotation = defaultRot;
 
-        autoFocalShift.pauseFocalShift = false;
+        worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 58.0f, Time.deltaTime * focalShiftSpeed);
+        worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 5.0f, Time.deltaTime * focalShiftSpeed);
 
         gameObject.GetComponent<AudioSource>().clip = ringtone;
         gameObject.GetComponent<AudioSource>().Play();

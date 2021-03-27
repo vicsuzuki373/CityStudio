@@ -9,6 +9,7 @@ public class pedestrians : MonoBehaviour
     public GameObject prefabPedestrian;
     public int poolAmount;
     public List<GameObject> pedestrianPool;
+    public static bool restart;
 
     [Header("Pedestrian Settings")]
     public float maxPedestrianSpeed;
@@ -19,6 +20,19 @@ public class pedestrians : MonoBehaviour
         for(int i = 0; i < poolAmount; i++)
         {
             createPedestrian();
+        }
+
+        restart = false;
+    }
+    void Update()
+    {
+        if(restart)
+        {
+            foreach(pedestrianObject child in gameObject.GetComponentsInChildren<pedestrianObject>())
+            {
+                child.restart();
+            }
+            restart = false;
         }
     }
 

@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Car : MonoBehaviour
 {
-    public float steer = 25;
-    public float maxsteer = 50;
-    public float acceleration = 15;
+    public float steer = 10;
+    public float acceleration = 1.5f;
 
     public static float maxspeed = 10;
     public static bool reverse = false;
@@ -55,7 +54,7 @@ public class Car : MonoBehaviour
             else if (LT > 0 && velocity > 0.2f) // Controller
                 accelerate = -acceleration * 2 * LT;
 
-            if (velocity > 0.01f && rotate > -maxsteer) // Controller
+            if (velocity > 0.01f && rotate > -steer && rotate < steer) // Controller
             {
                 if(LeftJoystick != 0)
                     rotate += steer * Time.deltaTime * LeftJoystick;
@@ -87,7 +86,7 @@ public class Car : MonoBehaviour
         }
 
         accelerate = 0;
-        rotate *= 0.9f;
+        rotate -= rotate * 8 * Time.deltaTime;
 
         collisiondelay += Time.deltaTime;
 

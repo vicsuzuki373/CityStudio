@@ -23,7 +23,7 @@ public class CarAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        random = Random.Range(0, cars.Count - 1);
+        random = Random.Range(0, cars.Count);
         spawnedcars.Add((GameObject)Instantiate(cars[random], transform.position, transform.rotation));
         amountcar += 1;
         nextwaypoint.Add(0);
@@ -32,6 +32,7 @@ public class CarAI : MonoBehaviour
             waypoints.Add(transform.GetChild(i).gameObject);
             if(transform.GetChild(i).gameObject.GetComponent<CarAIWaypoint>().spawncar)
             {
+                random = Random.Range(0, cars.Count);
                 spawnedcars.Add((GameObject)Instantiate(cars[random], transform.GetChild(i).position, transform.rotation));
                 amountcar += 1;
                 nextwaypoint.Add(i + 1);
@@ -49,7 +50,7 @@ public class CarAI : MonoBehaviour
             timer += Time.deltaTime;
             if (timer > spawndelay && Vector3.Distance(spawnedcars[spawnedcars.Count - 1].transform.position, transform.position) > 5 && amountcar < maxamountcar)
             {
-                random = Random.Range(0, cars.Count - 1);
+                random = Random.Range(0, cars.Count);
                 spawnedcars.Add((GameObject)Instantiate(cars[random], transform.position, transform.rotation));
                 amountcar += 1;
                 nextwaypoint.Add(0);
@@ -106,7 +107,7 @@ public class CarAI : MonoBehaviour
 
     private void Restart()
     {
-        random = Random.Range(0, cars.Count - 1);
+        random = Random.Range(0, cars.Count);
         for (int i = 0; i < spawnedcars.Count; i++)
         {
             GameObject temp = spawnedcars[i];
@@ -121,6 +122,7 @@ public class CarAI : MonoBehaviour
         {
             if (transform.GetChild(i).gameObject.GetComponent<CarAIWaypoint>().spawncar)
             {
+                random = Random.Range(0, cars.Count);
                 spawnedcars.Add((GameObject)Instantiate(cars[random], transform.GetChild(i).position, transform.rotation));
                 amountcar += 1;
                 nextwaypoint.Add(i + 1);

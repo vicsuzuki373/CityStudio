@@ -81,6 +81,8 @@
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\CarAI\CarAI.cs" />
     <Compile Include="Assets\Scripts\Raycast.cs" />
+    <Compile Include="Assets\Scripts\spatialPartition.cs" />
+    <Compile Include="Assets\Scripts\spatialPartitionObject.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

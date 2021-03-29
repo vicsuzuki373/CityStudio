@@ -41,7 +41,7 @@ public class igEditor : MonoBehaviour
     Bloom worldBloom;
     public Light worldLightSun;
     public Light worldLightMoon;
-
+    public GameObject extraLights;
 
     [Header("Camera")]
     public GameObject overheadCam;
@@ -124,7 +124,7 @@ public class igEditor : MonoBehaviour
             ddown = false;
             return;
         }
-        
+
         vertical = Gamepad.current.rightStick.ReadValue().y;
         horizontal = Gamepad.current.rightStick.ReadValue().x;
         aButton = Gamepad.current.aButton.isPressed;
@@ -140,7 +140,7 @@ public class igEditor : MonoBehaviour
 
     void autoScrollDropDown()
     {
-        foreach(Scrollbar bar in dropDownList)
+        foreach (Scrollbar bar in dropDownList)
         {
             bar.value -= (autoScrollSpeed * bar.size) * Time.deltaTime;
             if (bar.value <= 0.0f)
@@ -165,7 +165,7 @@ public class igEditor : MonoBehaviour
     void cameraControls()
     {
         if (!overheadCam.activeInHierarchy) // overheadCam gatekeeper, everything below req. overheadCam active
-        {  return; }
+        { return; }
 
         selectorRC();
         getControllerInput();
@@ -235,7 +235,7 @@ public class igEditor : MonoBehaviour
         uiPointerEventData.position = Input.mousePosition;
         List<RaycastResult> uiResults = new List<RaycastResult>();
         uiRaycast.Raycast(uiPointerEventData, uiResults);
- 
+
 
         if ((Input.GetMouseButton(0) || aButton) && uiResults.Count == 0) //leftclick
         {
@@ -251,7 +251,7 @@ public class igEditor : MonoBehaviour
             }
             else if (selected != null && selected.GetComponent<igEditorUI>().entityType != 3) // 3 is radio, cant move that
             {
-                switch(selected.GetComponent<igEditorUI>().entityType)
+                switch (selected.GetComponent<igEditorUI>().entityType)
                 {
                     case 1:
                         if (selected.transform.position.z <= -385.0f)
@@ -273,7 +273,7 @@ public class igEditor : MonoBehaviour
                         {
                             selected.transform.position = new Vector3(hit.point.x, hit.point.y + selected.GetComponent<Collider>().bounds.extents.y, hit.point.z);
                             selected.GetComponent<pedestrianObject>().initialJayWalkerPosi = selected.transform.position;
-                            if(jayDirection)
+                            if (jayDirection)
                                 selected.transform.rotation = Quaternion.Euler(0, -120.0f, -0);
                             else
                                 selected.transform.rotation = Quaternion.Euler(0, 60.0f, -0);
@@ -289,7 +289,7 @@ public class igEditor : MonoBehaviour
                         }
                         break;
                 }
-                
+
             }
         }
         else if ((Input.GetMouseButton(1) || bButton) && uiResults.Count == 0) //rightclick
@@ -352,9 +352,9 @@ public class igEditor : MonoBehaviour
     {
         try
         {
-            if(selected.GetComponent<igEditorUI>().entityType == 1)
+            if (selected.GetComponent<igEditorUI>().entityType == 1)
                 this.GetComponent<fileExplorer>().applySelection(selected, 0);
-            else if(selected.GetComponent<igEditorUI>().entityType == 2)
+            else if (selected.GetComponent<igEditorUI>().entityType == 2)
             {
                 selected.GetComponent<igEditorUI>().changeInfo(info);
             }
@@ -372,18 +372,19 @@ public class igEditor : MonoBehaviour
     {
         lightSwitch = !lightSwitch;
 
-        if(lightSwitch == true)
+        if (lightSwitch == true)
         {
             worldBloom.intensity.value = 15.0f;
             worldLightSun.gameObject.SetActive(false);
             worldLightMoon.gameObject.SetActive(true);
-            foreach(Light _lights in lightPieces)
+            foreach (Light _lights in lightPieces)
             {
                 _lights.intensity = 5.0f;
             }
             RenderSettings.ambientIntensity = 0.0f;
             playerCam.GetComponent<Camera>().clearFlags = CameraClearFlags.SolidColor;
-                
+
+            extraLights.SetActive(true);
         }
         else
         {
@@ -396,6 +397,8 @@ public class igEditor : MonoBehaviour
             }
             RenderSettings.ambientIntensity = 1.0f;
             playerCam.GetComponent<Camera>().clearFlags = CameraClearFlags.Skybox;
+
+            extraLights.SetActive(false);
         }
     }
 
@@ -464,7 +467,7 @@ public class igEditor : MonoBehaviour
 
         int output = 0;
 
-        foreach(char chars in characters)
+        foreach (char chars in characters)
         {
             output += (int)chars;
         }
@@ -475,7 +478,7 @@ public class igEditor : MonoBehaviour
 
     public void TTbuttons(int index)
     {
-        switch(index)
+        switch (index)
         {
             case 0:
                 TTplayer.clip = TTclips[index];
@@ -509,4 +512,5 @@ public class igEditor : MonoBehaviour
             bar.value = 1.0f;
         }
     }
+
 }

@@ -109,7 +109,7 @@ public class phoneTexting : MonoBehaviour
         gameObject.transform.localPosition = defaultPos;
         gameObject.transform.localRotation = defaultRot;
 
-        worldDepth.focalLength.value = Mathf.Lerp(worldDepth.focalLength.value, 58.0f, Time.deltaTime * focalShiftSpeed);
+        worldDepth.focalLength.value = 70.0f;
         worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 5.0f, Time.deltaTime * focalShiftSpeed);
 
         gameObject.GetComponent<AudioSource>().clip = ringtone;

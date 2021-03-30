@@ -61,6 +61,5 @@ public class Raycast : MonoBehaviour
                 worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 15f, Time.deltaTime * focalShiftSpeed);
             } //far
         }
-        //Debug.Log(Vector3.Distance(transform.position, hit.point));
     }
 }

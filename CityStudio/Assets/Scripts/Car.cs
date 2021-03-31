@@ -12,26 +12,31 @@ public class Car : MonoBehaviour
     public static float velocity;
     public static int amountcollided = 0;
     public static bool restart;
+    public static float DistanceDriven = 0;
+    public static float sessionTime = 0;
 
+    private bool grounded = true;
+    private float distanceTimer = 0;
+    private float speedTimer = 0;
+    private static float speedCount = 0;
+    private static float TotalSpeed = 0;
+    private Vector3 lastposition;
     private float rotate;
     private float accelerate;
     private float collisiondelay;
     private Vector3 startPosition;
     private Quaternion startRotation;
-
     public GameObject editorCam;
 
     void Start()
     {
         startPosition = transform.position;
         startRotation = transform.rotation;
+        lastposition = startPosition;
     }
 
     void Update()
     {
-        //if (editorCam.activeInHierarchy) // disable car control during editor
-        //    return;
-
         float LeftJoystick = Input.GetAxis("LeftJoystick");
         float RT = Input.GetAxis("RT");
         float LT = Input.GetAxis("LT");
@@ -39,61 +44,89 @@ public class Car : MonoBehaviour
 
         if (!MenuController.paused)
         {
-            if ((Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton4)) && velocity < 0.1f)
-                reverse = true;
-            else if ((Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.JoystickButton5)) && velocity < 0.1f)
-                reverse = false;
-
-            if (Input.GetKey(KeyCode.W) && velocity < maxspeed + 0.05f)
-                accelerate = acceleration;
-            else if (RT > 0 && velocity < maxspeed + 0.05f) // Controller
-                accelerate = acceleration * RT;
-
-            if (Input.GetKey(KeyCode.S) && velocity > 0.2f)
-                accelerate = -acceleration * 2;
-            else if (LT > 0 && velocity > 0.2f) // Controller
-                accelerate = -acceleration * 2 * LT;
-
-            if (velocity > 0.01f && rotate > -steer && rotate < steer) // Controller
+            if (grounded)
             {
-                if(LeftJoystick != 0)
-                    rotate += steer * Time.deltaTime * LeftJoystick;
-                if (Input.GetKey(KeyCode.A))
-                    rotate -= steer * Time.deltaTime;
-                if (Input.GetKey(KeyCode.D))
-                    rotate += steer * Time.deltaTime;
+                if ((Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton4)) && velocity < 0.1f)
+                    reverse = true;
+                else if ((Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.JoystickButton5)) && velocity < 0.1f)
+                    reverse = false;
+
+                if (Input.GetKey(KeyCode.W) && velocity < maxspeed + 0.05f)
+                    accelerate = acceleration;
+                else if (RT > 0 && velocity < maxspeed + 0.05f) // Controller
+                    accelerate = acceleration * RT;
+
+                if (Input.GetKey(KeyCode.S) && velocity > 0.2f)
+                    accelerate = -acceleration * 2;
+                else if (LT > 0 && velocity > 0.2f) // Controller
+                    accelerate = -acceleration * 2 * LT;
+
+                if (velocity > 0.01f && rotate > -steer && rotate < steer) // Controller
+                {
+                    if (LeftJoystick != 0)
+                        rotate += steer * Time.deltaTime * LeftJoystick;
+                    if (Input.GetKey(KeyCode.A))
+                        rotate -= steer * Time.deltaTime;
+                    if (Input.GetKey(KeyCode.D))
+                        rotate += steer * Time.deltaTime;
+                }
             }
-        }
-
-        if (!reverse)
-        {
-            gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * accelerate * Time.deltaTime, ForceMode.Impulse);
-            if (rotate != 0)
+            else
             {
-                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate));
-                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * transform.forward;
+                gameObject.GetComponent<Rigidbody>().AddForce(-Vector3.up * Time.deltaTime * 10, ForceMode.Impulse);
+                transform.rotation = startRotation;
             }
 
-        }
-        else
-        {
-            gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * -accelerate * Time.deltaTime, ForceMode.Impulse);
-            if (rotate != 0)
+
+            if (!reverse)
             {
-                gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate * -1));
-                gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * -transform.forward;
+                gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * accelerate * Time.deltaTime, ForceMode.Impulse);
+                if (rotate != 0)
+                {
+                    gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate));
+                    gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * transform.forward;
+                }
+
             }
-        }
+            else
+            {
+                gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * -accelerate * Time.deltaTime, ForceMode.Impulse);
+                if (rotate != 0)
+                {
+                    gameObject.GetComponent<Rigidbody>().MoveRotation(transform.rotation * Quaternion.Euler(transform.up * rotate * -1));
+                    gameObject.GetComponent<Rigidbody>().velocity = gameObject.GetComponent<Rigidbody>().velocity.magnitude * -transform.forward;
+                }
+            }
 
-        accelerate = 0;
-        rotate -= rotate * 8 * Time.deltaTime;
+            accelerate = 0;
+            rotate -= rotate * 8 * Time.deltaTime;
 
-        collisiondelay += Time.deltaTime;
+            collisiondelay += Time.deltaTime;
 
-        if (restart)
-        {
-            Restart();
-            restart = false;
+            distanceTimer += Time.deltaTime;
+
+            sessionTime += Time.deltaTime;
+
+            if (distanceTimer > 2)
+            {
+                DistanceDriven += Vector3.Distance(lastposition, transform.position);
+                lastposition = transform.position;
+                distanceTimer = 0;
+            }
+
+            speedTimer += Time.deltaTime;
+            if(speedTimer > 1)
+            {
+                TotalSpeed += velocity;
+                speedCount += 1;
+                speedTimer = 0;
+            }
+
+            if (restart)
+            {
+                Restart();
+                restart = false;
+            }
         }
     }
 
@@ -105,6 +138,15 @@ public class Car : MonoBehaviour
             amountcollided += 1;
             collisiondelay = 0;
         }
+        if (collision.collider.name == "colliderMesh")
+            grounded = true;
+        else if (collision.collider.name == "resetcollider")
+            transform.Translate(Vector3.up);
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.name == "colliderMesh")
+            grounded = false;
     }
 
     private void Restart()
@@ -118,5 +160,18 @@ public class Car : MonoBehaviour
         amountcollided = 0;
         transform.position = startPosition;
         transform.rotation = startRotation;
+        DistanceDriven = 0;
+        grounded = true;
+        distanceTimer = 0;
+        speedTimer = 0;
+        speedCount = 0;
+        TotalSpeed = 0;
+        sessionTime = 0;
+        lastposition = startPosition;
+    }
+
+    public static int GetAverageSpeed()
+    {
+        return (int)(10 * (TotalSpeed / speedCount));
     }
 }

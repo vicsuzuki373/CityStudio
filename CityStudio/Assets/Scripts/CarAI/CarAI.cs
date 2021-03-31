@@ -60,7 +60,7 @@ public class CarAI : MonoBehaviour
 
             for (int i = 0; i < spawnedcars.Count; i++)
             {
-                if (Vector3.Distance(spawnedcars[i].transform.position, playercar.transform.position) > 50)
+                if (Vector3.Distance(spawnedcars[i].transform.position, playercar.transform.position) > 100)
                 {
                     foreach (Renderer r in spawnedcars[i].GetComponentsInChildren<Renderer>())
                         r.enabled = false;

@@ -147,6 +147,11 @@ public class MenuController : MonoBehaviour
         else if (LeftJoystickY < -0.5f && AllSessions.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(SessionsReturn);
 
+
+        if(MenuCamera.activeInHierarchy == true)
+        {
+            MenuCamera.transform.rotation = Quaternion.Euler(MenuCamera.transform.eulerAngles.x, MenuCamera.transform.eulerAngles.y + 7.5f * Time.deltaTime, MenuCamera.transform.eulerAngles.z);
+        }
     }
 
     public void Play()

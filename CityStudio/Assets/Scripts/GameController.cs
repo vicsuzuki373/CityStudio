@@ -51,6 +51,11 @@ public class GameController : MonoBehaviour
         redLightUI.SetActive(false);
         speedLimitUI.SetActive(false);
         collisionUI.SetActive(false);
+
+
+        //cap framerate to lessen stutter
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
     }
 
     void Update()

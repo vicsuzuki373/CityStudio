@@ -53,7 +53,8 @@ public class Raycast : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, hit.point) < 0.75f)
             {
-                worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 0.2f, Time.deltaTime * focalShiftSpeed);
+                if(hit.collider.tag != "ignoreRaycast")
+                    worldDepth.focusDistance.value = Mathf.Lerp(worldDepth.focusDistance.value, 0.2f, Time.deltaTime * focalShiftSpeed);
 
             } //near
             else

@@ -13,8 +13,18 @@ public class MenuController : MonoBehaviour
     public GameObject MenuCamera;
     public GameObject MenuPlay;
     public GameObject MenuEditor;
+    public GameObject MenuControls;
     public GameObject MenuSessions;
     public GameObject MenuExit;
+    private bool menuControls = false;
+
+    [Header("Tutorial Objects")]
+    public Image Tutorial;
+    public GameObject TutNext;
+    public Sprite TutControls;
+    public Sprite TutSpeedometer;
+    public Sprite TutObjective;
+    private int tutorialCounter = 0;
 
     [Header("Car/Gameplay objects")]
     public GameObject car;
@@ -45,8 +55,8 @@ public class MenuController : MonoBehaviour
     private bool isPlaying = false;
     public static bool paused = true;
     public static bool gameover = false;
-    private string sessionssimplepath = "Assets/Resources/sessionssimple.txt";
-    private string sessionscompletepath = "Assets/Resources/sessionscomplete.txt";
+    private string sessionssimplepath = "sessionssimple.txt";
+    private string sessionscompletepath = "sessionscomplete.txt";
 
     // Start is called before the first frame update
     void Start()
@@ -146,9 +156,11 @@ public class MenuController : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(GameRestart);
         else if (LeftJoystickY < -0.5f && AllSessions.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(SessionsReturn);
+        else if (LeftJoystickY < -0.5f && Tutorial.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(TutNext);
 
 
-        if(MenuCamera.activeInHierarchy == true)
+        if (MenuCamera.activeInHierarchy == true)
         {
             MenuCamera.transform.rotation = Quaternion.Euler(MenuCamera.transform.eulerAngles.x, MenuCamera.transform.eulerAngles.y + 7.5f * Time.deltaTime, MenuCamera.transform.eulerAngles.z);
         }
@@ -162,6 +174,9 @@ public class MenuController : MonoBehaviour
         MenuCamera.SetActive(false);
         MenuPlay.SetActive(false);
         MenuEditor.SetActive(false);
+        MenuControls.SetActive(false);
+        MenuControls.transform.GetChild(1).gameObject.SetActive(false);
+        menuControls = false;
         MenuSessions.SetActive(false);
         MenuExit.SetActive(false);
         car.SetActive(true);
@@ -175,6 +190,9 @@ public class MenuController : MonoBehaviour
         MenuCamera.SetActive(false);
         MenuPlay.SetActive(false);
         MenuEditor.SetActive(false);
+        MenuControls.SetActive(false);
+        MenuControls.transform.GetChild(1).gameObject.SetActive(false);
+        menuControls = false;
         MenuSessions.SetActive(false);
         MenuExit.SetActive(false);
         igEditor.startEditor = true;
@@ -190,6 +208,7 @@ public class MenuController : MonoBehaviour
         MenuCamera.SetActive(true);
         MenuPlay.SetActive(true);
         MenuEditor.SetActive(true);
+        MenuControls.SetActive(true);
         MenuSessions.SetActive(true);
         MenuExit.SetActive(true);
         igEditor.startEditor = true;
@@ -202,20 +221,24 @@ public class MenuController : MonoBehaviour
         AllSessions.SetActive(false);
         MenuPlay.SetActive(true);
         MenuEditor.SetActive(true);
+        MenuControls.SetActive(true);
         MenuSessions.SetActive(true);
         MenuExit.SetActive(true);
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(MenuPlay);
     }
 
-        public void ReturnFromGame()
+    public void ReturnFromGame()
     {
+        if (phone.GetComponent<phoneTexting>().isInHand)
+            phone.GetComponent<phoneTexting>().stopTexting();
         Restart();
         isPlaying = false;
         paused = true;
         MenuCamera.SetActive(true);
         MenuPlay.SetActive(true);
         MenuEditor.SetActive(true);
+        MenuControls.SetActive(true);
         MenuSessions.SetActive(true);
         MenuExit.SetActive(true);
         car.SetActive(false);
@@ -310,6 +333,9 @@ public class MenuController : MonoBehaviour
         AllSessions.SetActive(true);
         MenuPlay.SetActive(false);
         MenuEditor.SetActive(false);
+        MenuControls.SetActive(false);
+        MenuControls.transform.GetChild(1).gameObject.SetActive(false);
+        menuControls = false;
         MenuSessions.SetActive(false);
         MenuExit.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
@@ -335,5 +361,44 @@ public class MenuController : MonoBehaviour
         File.Create(sessionscompletepath).Close();
         for(int i = 0; i < SessionsStats.Count; i++)
             SessionsStats[i].text = "";
+    }
+
+    public void NextTutorial()
+    {
+        tutorialCounter += 1;
+        if(tutorialCounter == 1)
+            Tutorial.sprite = TutSpeedometer;
+        else if(tutorialCounter == 2)
+            Tutorial.sprite = TutObjective;
+        else
+        {
+            Tutorial.sprite = TutControls;
+            Tutorial.gameObject.SetActive(false);
+            tutorialCounter = 0;
+            Play();
+        }
+
+    }
+    public void StartTutorial()
+    {
+        MenuPlay.SetActive(false);
+        MenuEditor.SetActive(false);
+        MenuControls.SetActive(false);
+        MenuControls.transform.GetChild(1).gameObject.SetActive(false);
+        menuControls = false;
+        MenuSessions.SetActive(false);
+        MenuExit.SetActive(false);
+        Tutorial.gameObject.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(TutNext);
+    }
+
+    public void Controls()
+    {
+        menuControls = !menuControls;
+        if (menuControls)
+            MenuControls.transform.GetChild(1).gameObject.SetActive(true);
+        else
+            MenuControls.transform.GetChild(1).gameObject.SetActive(false);
     }
 }

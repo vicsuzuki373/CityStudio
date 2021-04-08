@@ -6,6 +6,7 @@ TagManager:
   tags:
   - igEditor
   - igEditorHandle
+  - ignoreRaycast
   layers:
   - Default
   - TransparentFX

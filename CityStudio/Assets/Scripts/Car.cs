@@ -46,6 +46,7 @@ public class Car : MonoBehaviour
         {
             if (grounded)
             {
+                gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                 if ((Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.JoystickButton4)) && velocity < 0.1f)
                     reverse = true;
                 else if ((Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.JoystickButton5)) && velocity < 0.1f)
@@ -74,7 +75,7 @@ public class Car : MonoBehaviour
             else
             {
                 gameObject.GetComponent<Rigidbody>().AddForce(-Vector3.up * Time.deltaTime * 10, ForceMode.Impulse);
-                transform.rotation = startRotation;
+                gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             }
 
 
@@ -141,7 +142,10 @@ public class Car : MonoBehaviour
         if (collision.collider.name == "colliderMesh")
             grounded = true;
         else if (collision.collider.name == "resetcollider")
+        {
             transform.Translate(Vector3.up);
+            transform.rotation = startRotation;
+        }
     }
     private void OnCollisionExit(Collision collision)
     {

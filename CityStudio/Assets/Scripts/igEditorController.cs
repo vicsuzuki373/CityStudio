@@ -82,25 +82,25 @@ public class igEditorController : MonoBehaviour
     {
         updatePos = false; // reset to allow for mouse movement again
 
-        if (Gamepad.current.leftStick.ReadValue().x <= -joystickDetect)
+        if (Gamepad.current.rightStick.ReadValue().x <= -joystickDetect)
         {
-            virtualMousePos.x = Input.mousePosition.x - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.leftStick.ReadValue().x));
+            virtualMousePos.x = Input.mousePosition.x - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
             updatePos = true;
         }
-        else if (Gamepad.current.leftStick.ReadValue().x >= joystickDetect)
+        else if (Gamepad.current.rightStick.ReadValue().x >= joystickDetect)
         {
-            virtualMousePos.x = Input.mousePosition.x + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.leftStick.ReadValue().x));
+            virtualMousePos.x = Input.mousePosition.x + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
             updatePos = true;
         }
 
-        if (Gamepad.current.leftStick.ReadValue().y <= -joystickDetect)
+        if (Gamepad.current.rightStick.ReadValue().y <= -joystickDetect)
         {
-            virtualMousePos.y = Input.mousePosition.y - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.leftStick.ReadValue().y));
+            virtualMousePos.y = Input.mousePosition.y - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;
         }
-        else if (Gamepad.current.leftStick.ReadValue().y >= joystickDetect)
+        else if (Gamepad.current.rightStick.ReadValue().y >= joystickDetect)
         {
-            virtualMousePos.y = Input.mousePosition.y + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.leftStick.ReadValue().y));
+            virtualMousePos.y = Input.mousePosition.y + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;
         }
 

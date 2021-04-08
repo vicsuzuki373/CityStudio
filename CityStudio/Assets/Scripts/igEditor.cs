@@ -125,12 +125,12 @@ public class igEditor : MonoBehaviour
             return;
         }
 
-        vertical = Gamepad.current.rightStick.ReadValue().y;
-        horizontal = Gamepad.current.rightStick.ReadValue().x;
+        vertical = Gamepad.current.leftStick.ReadValue().y;
+        horizontal = Gamepad.current.leftStick.ReadValue().x;
         aButton = Gamepad.current.aButton.isPressed;
         bButton = Gamepad.current.bButton.isPressed;
         yButton = Gamepad.current.yButton.isPressed;
-        rightStickButton = Gamepad.current.rightStickButton.isPressed;
+        rightStickButton = Gamepad.current.xButton.isPressed;
         dup = Gamepad.current.dpad.up.isPressed;
         ddown = Gamepad.current.dpad.down.isPressed;
 

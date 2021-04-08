@@ -6,7 +6,6 @@ public class CarAI : MonoBehaviour
 {
     public bool restart = false;
     public static int maxamountcar = 1000;
-    public float spawndelay = 10;
     public bool opposite = false;
     public float speed = 3;
     public GameObject playercar;
@@ -19,11 +18,13 @@ public class CarAI : MonoBehaviour
     private List<int> nextwaypoint = new List<int>();
     private int random = 0;
     private float timer = 0;
+    private float spawndelay = 10;
 
     // Start is called before the first frame update
     void Start()
     {
         random = Random.Range(0, cars.Count);
+        spawndelay = Random.Range(5, 10);
         spawnedcars.Add((GameObject)Instantiate(cars[random], transform.position, transform.rotation));
         amountcar += 1;
         nextwaypoint.Add(0);
@@ -51,6 +52,7 @@ public class CarAI : MonoBehaviour
             if (timer > spawndelay && Vector3.Distance(spawnedcars[spawnedcars.Count - 1].transform.position, transform.position) > 5 && amountcar < maxamountcar)
             {
                 random = Random.Range(0, cars.Count);
+                spawndelay = Random.Range(5, 10);
                 spawnedcars.Add((GameObject)Instantiate(cars[random], transform.position, transform.rotation));
                 amountcar += 1;
                 nextwaypoint.Add(0);

@@ -82,25 +82,25 @@ public class igEditorController : MonoBehaviour
     {
         updatePos = false; // reset to allow for mouse movement again
 
-        if (Gamepad.current.rightStick.ReadValue().x <= -joystickDetect)
+        if (Gamepad.current.rightStick.ReadValue().y <= -joystickDetect && virtualMousePos.y > 0)
         {
-            virtualMousePos.x = Input.mousePosition.x - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
+            virtualMousePos.y = virtualMousePos.y + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;
         }
-        else if (Gamepad.current.rightStick.ReadValue().x >= joystickDetect)
+        else if (Gamepad.current.rightStick.ReadValue().y >= joystickDetect && virtualMousePos.y < Screen.height)
         {
-            virtualMousePos.x = Input.mousePosition.x + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
+            virtualMousePos.y = virtualMousePos.y - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;
         }
 
-        if (Gamepad.current.rightStick.ReadValue().y <= -joystickDetect)
+        if (Gamepad.current.rightStick.ReadValue().x <= -joystickDetect && virtualMousePos.x > 0)
         {
-            virtualMousePos.y = Input.mousePosition.y - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
+            virtualMousePos.x = virtualMousePos.x - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
             updatePos = true;
         }
-        else if (Gamepad.current.rightStick.ReadValue().y >= joystickDetect)
+        else if (Gamepad.current.rightStick.ReadValue().x >= joystickDetect && virtualMousePos.x < Screen.width)
         {
-            virtualMousePos.y = Input.mousePosition.y + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
+            virtualMousePos.x = virtualMousePos.x + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().x));
             updatePos = true;
         }
 

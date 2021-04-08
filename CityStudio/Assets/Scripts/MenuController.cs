@@ -148,15 +148,15 @@ public class MenuController : MonoBehaviour
         }
 
         float LeftJoystickY = Input.GetAxis("LeftJoystickY");
-        if(LeftJoystickY < -0.5f && MenuPlay.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        if(LeftJoystickY > 0.5f && MenuPlay.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(MenuPlay);
-        else if(LeftJoystickY < -0.5f && GameResume.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        else if(LeftJoystickY > 0.5f && GameResume.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(GameResume);
-        else if (LeftJoystickY < -0.5f && Results.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        else if (LeftJoystickY > 0.5f && Results.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(GameRestart);
-        else if (LeftJoystickY < -0.5f && AllSessions.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        else if (LeftJoystickY > 0.5f && AllSessions.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(SessionsReturn);
-        else if (LeftJoystickY < -0.5f && Tutorial.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+        else if (LeftJoystickY > 0.5f && Tutorial.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(TutNext);
 
 

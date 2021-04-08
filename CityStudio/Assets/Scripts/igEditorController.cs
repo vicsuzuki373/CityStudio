@@ -82,12 +82,12 @@ public class igEditorController : MonoBehaviour
     {
         updatePos = false; // reset to allow for mouse movement again
 
-        if (Gamepad.current.rightStick.ReadValue().y <= -joystickDetect && virtualMousePos.y > 0)
+        if (Gamepad.current.rightStick.ReadValue().y <= -joystickDetect && virtualMousePos.y < Screen.height)
         {
             virtualMousePos.y = virtualMousePos.y + (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;
         }
-        else if (Gamepad.current.rightStick.ReadValue().y >= joystickDetect && virtualMousePos.y < Screen.height)
+        else if (Gamepad.current.rightStick.ReadValue().y >= joystickDetect && virtualMousePos.y > 0)
         {
             virtualMousePos.y = virtualMousePos.y - (virtualMouseSpd * Time.deltaTime * Mathf.Abs(Gamepad.current.rightStick.ReadValue().y));
             updatePos = true;

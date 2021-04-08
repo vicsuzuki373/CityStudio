@@ -69,7 +69,7 @@ public class igEditor : MonoBehaviour
     TextMeshProUGUI TTtext;
     public List<VideoClip> TTclips;
     VideoPlayer TTplayer;
-    public Toggle TTtoggle;
+    bool TTisOn;
 
     void Start()
     {
@@ -96,13 +96,13 @@ public class igEditor : MonoBehaviour
 
         TTtext = TTwindow.GetComponentInChildren<TextMeshProUGUI>();
         TTplayer = TTwindow.GetComponentInChildren<VideoPlayer>();
+        TTisOn = false;
     }
 
     void Update()
     {
         cameraSwitch();
         radioChannel();
-        TTwindow.SetActive(TTtoggle.isOn);
     }
 
     private void FixedUpdate()
@@ -501,6 +501,12 @@ public class igEditor : MonoBehaviour
                 TTtext.text = "Use the keyboard keys; W, A, S, D to move editor camera around the scene. Holding Shift key will allow for faster movement.";
                 break;
         }
+    }
+
+    public void TTtoggle()
+    {
+        TTisOn = !TTisOn;
+        TTwindow.SetActive(TTisOn);
     }
 
     private IEnumerator redoAutoScroll(float waitTime)

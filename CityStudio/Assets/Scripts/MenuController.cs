@@ -341,6 +341,11 @@ public class MenuController : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(SessionsReturn);
 
+        for (int i = 0; i < SessionsStats.Count; i++)
+        {
+            SessionsStats[i].text = "";
+        }
+
         StreamReader reader1 = new StreamReader(sessionscompletepath);
         string temp = reader1.ReadToEnd();
         string[] lines = temp.Split('\n');
